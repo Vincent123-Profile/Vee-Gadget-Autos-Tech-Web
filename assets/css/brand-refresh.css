@@ -252,3 +252,18 @@ footer a:hover { color: var(--vg-orange) !important; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
+/* Preserve contrast on branded and photo-overlay actions */
+.bg-brandOrange, .bg-brandOrange\/90, .bg-brandOrangeHover,
+.bg-emerald-600, .bg-emerald-700, .bg-red-600,
+.bg-black, .bg-black\/60, .bg-black\/70, .bg-black\/80 {
+  color: #fff !important;
+}
+.bg-brandOrange:hover, .bg-brandOrange\/90:hover { color: #fff !important; }
+#view-home a.gradient-orange, #view-home a.bg-white\/10 {
+  min-height: 48px; border-radius: 13px !important;
+}
+#view-home a.bg-white\/10 {
+  background: #171717 !important; color: #fff !important; border-color: #171717 !important;
+}
+#view-home a.bg-white\/10 .text-brandOrange { color: #ff8b68 !important; }
+#view-home a.gradient-orange { color: #fff !important; }
