@@ -2562,7 +2562,7 @@
       try {
         await auth.signInWithEmailAndPassword(document.getElementById('admEmail').value, document.getElementById('admPass').value);
         const user = auth.currentUser;
-        const token = await user.getIdToken();
+        const token = await user.getIdToken(true);
         const setupResponse = await fetch('/.netlify/functions/bootstrap-admin', {
           method: 'POST',
           headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
