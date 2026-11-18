@@ -1,0 +1,254 @@
+/* Vee Gadget Autos Tech, premium storefront refresh */
+:root {
+  color-scheme: light;
+  --vg-orange: #F14C15;
+  --vg-orange-dark: #D83E0C;
+  --vg-ink: #111111;
+  --vg-muted: #68707b;
+  --vg-line: #e8e9eb;
+  --vg-paper: #ffffff;
+  --vg-canvas: #f6f7f8;
+  --vg-radius: 22px;
+  --vg-shadow: 0 12px 34px rgba(17, 17, 17, .06);
+}
+html { scroll-behavior: smooth; scroll-padding-top: 96px; }
+body.bg-brandDark {
+  background: var(--vg-canvas) !important;
+  color: var(--vg-ink) !important;
+  font-family: "DM Sans", "Manrope", sans-serif !important;
+  letter-spacing: -.01em;
+}
+.skip-link {
+  position: fixed; left: 14px; top: 10px; z-index: 1000;
+  transform: translateY(-150%); background: var(--vg-ink); color: #fff;
+  padding: 12px 16px; border-radius: 12px; font-weight: 700;
+}
+.skip-link:focus { transform: translateY(0); }
+.ambient-orb { display: none !important; }
+header.liquid-nav {
+  background: rgba(255,255,255,.94) !important;
+  border-bottom: 1px solid var(--vg-line) !important;
+  box-shadow: 0 4px 20px rgba(17,17,17,.035);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+header .max-w-7xl { max-width: 1440px; padding-top: 13px; padding-bottom: 13px; }
+#brandHeaderLogo h1 { color: var(--vg-ink) !important; font-family: Manrope, sans-serif; letter-spacing: -.045em; }
+#brandHeaderLogo .vg-logo-badge {
+  border: 0 !important; border-radius: 15px !important;
+  background: var(--vg-orange) !important; animation: none !important;
+  box-shadow: 0 8px 18px rgba(241,76,21,.18) !important;
+}
+#brandHeaderLogo .vg-logo-badge span { font-size: 18px; }
+header nav { gap: 22px !important; }
+header nav a { color: #41464d !important; font-size: 11px !important; letter-spacing: .045em; }
+header nav a:hover, header nav a:focus-visible { color: var(--vg-orange) !important; }
+header nav a[href*="veegadgetautostech"] { color: var(--vg-orange) !important; }
+#mobileNavMenu { background: #fff !important; border-color: var(--vg-line) !important; }
+#mobileNavMenu a { color: #42464d !important; }
+#mobileNavMenu a:hover { color: var(--vg-orange) !important; }
+header button[onclick="toggleCartDrawer()"] {
+  color: var(--vg-ink) !important; background: #f5f5f5 !important;
+  border: 1px solid var(--vg-line) !important; border-radius: 13px !important;
+}
+main.max-w-7xl { max-width: 1440px; padding: 30px 28px 64px !important; }
+main section { scroll-margin-top: 100px; }
+.liquid-glass, .liquid-glass-dark {
+  color: var(--vg-ink) !important;
+  background: #fff !important;
+  border: 1px solid var(--vg-line) !important;
+  border-radius: var(--vg-radius) !important;
+  box-shadow: var(--vg-shadow) !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.liquid-glass::before { display: none !important; }
+.liquid-glass:hover {
+  transform: translateY(-3px);
+  border-color: rgba(241,76,21,.32) !important;
+  box-shadow: 0 18px 38px rgba(17,17,17,.09) !important;
+}
+.liquid-glass-dark { background: #fff !important; }
+.bg-brandCharcoal, .bg-brandDark, .bg-brandCharcoal\/90 {
+  background-color: #fff !important;
+}
+.text-white, .text-slate-100, .text-slate-200, .text-slate-300 {
+  color: var(--vg-ink) !important;
+}
+.text-slate-400, .text-slate-500 { color: var(--vg-muted) !important; }
+.text-brandOrange { color: var(--vg-orange) !important; }
+.border-white\/5, .border-white\/10, .border-white\/20 {
+  border-color: var(--vg-line) !important;
+}
+.bg-white\/5, .bg-white\/10, .bg-white\/20 { background-color: #f4f5f6 !important; }
+.gradient-text {
+  background: linear-gradient(100deg, var(--vg-orange), #9d2c0a) !important;
+  -webkit-background-clip: text !important; background-clip: text !important;
+}
+.gradient-orange {
+  background: var(--vg-orange) !important;
+  color: #fff !important;
+  box-shadow: 0 9px 20px rgba(241,76,21,.17);
+}
+.gradient-orange:hover { background: var(--vg-orange-dark) !important; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid rgba(241,76,21,.28) !important; outline-offset: 2px;
+}
+button.bg-emerald-600, a.bg-emerald-600, .bg-emerald-600,
+button.bg-emerald-700, a.bg-emerald-700 {
+  background: #12834b !important; color: #fff !important;
+}
+button.bg-red-600, .bg-red-600 { color: #fff !important; }
+#view-home { gap: 52px !important; }
+#view-home > div:first-child {
+  min-height: 390px; display: flex; align-items: center;
+  padding: clamp(28px, 5vw, 68px) !important;
+  background:
+    radial-gradient(circle at 83% 48%, rgba(241,76,21,.13), transparent 28%),
+    linear-gradient(115deg, #fff 0%, #fff 58%, #fff4ef 100%) !important;
+  border: 1px solid #f0e3dd !important;
+  position: relative; isolation: isolate;
+}
+#view-home > div:first-child::after {
+  content: "VEE"; position: absolute; z-index: -1; right: 4%; top: 50%;
+  transform: translateY(-50%); font-family: Manrope, sans-serif;
+  font-size: clamp(110px, 22vw, 290px); line-height: .8; font-weight: 800;
+  letter-spacing: -.12em; color: rgba(241,76,21,.055); pointer-events: none;
+}
+#view-home > div:first-child > div { max-width: 740px; }
+#view-home h2 { color: var(--vg-ink) !important; font-family: Manrope, sans-serif; font-size: clamp(38px, 5.5vw, 68px) !important; line-height: 1.02 !important; letter-spacing: -.065em !important; }
+#view-home p { color: #626a73 !important; font-size: 14px !important; max-width: 590px; line-height: 1.8 !important; }
+#view-home .inline-flex.bg-brandOrange\/20 { background: #fff0ea !important; border-color: #ffd4c5 !important; color: var(--vg-orange) !important; }
+#view-home .grid.grid-cols-2.md\:grid-cols-4 > * {
+  background: #fff !important; border: 1px solid var(--vg-line) !important;
+  border-radius: 18px !important; box-shadow: 0 8px 24px rgba(17,17,17,.035) !important;
+}
+#view-home .grid.grid-cols-2.md\:grid-cols-4 h4 { color: var(--vg-ink) !important; }
+#view-home h3, #view-shop h2, #view-automobiles h2, #view-veexchange h2,
+#view-media h2, #view-find-device h2, #view-checkout h2 {
+  color: var(--vg-ink) !important; font-family: Manrope, sans-serif;
+  letter-spacing: -.045em !important;
+}
+#view-home h3 { font-size: 22px !important; text-transform: none !important; }
+#view-home .space-y-4 > .flex.items-center.justify-between { align-items: end; }
+#view-home .space-y-4 > .flex.items-center.justify-between p { font-size: 12px !important; }
+#view-shop > .liquid-glass, #view-automobiles > .liquid-glass,
+#view-media > .liquid-glass, #view-veexchange > .liquid-glass,
+#view-find-device > .liquid-glass {
+  background: linear-gradient(120deg, #fff 0%, #fff8f5 100%) !important;
+  border-color: #f0e0d9 !important; padding: 30px !important;
+}
+#view-shop h2, #view-automobiles h2, #view-media h2 { font-size: clamp(25px, 3vw, 34px) !important; }
+#view-shop p, #view-automobiles p, #view-media p, #view-veexchange p,
+#view-find-device p { color: #626a73 !important; line-height: 1.75; }
+#view-shop input, #view-shop select, #view-checkout input, #view-checkout textarea,
+#view-find-device input, #view-find-device select, #view-find-device textarea,
+input, select, textarea {
+  color: var(--vg-ink) !important; background: #fff !important;
+  border: 1px solid #dfe2e5 !important; border-radius: 12px !important;
+}
+input::placeholder, textarea::placeholder { color: #9aa1a9 !important; opacity: 1; }
+#view-shop .border-b, #view-checkout .border-b { border-color: var(--vg-line) !important; }
+#homeFeaturedGrid, #shopProductGrid, #autosGrid, #mediaGrid,
+#vxFlyersGrid, #vxProofsGrid, #quizResultsGrid { align-items: stretch; }
+#homeFeaturedGrid > *, #shopProductGrid > *, #autosGrid > *,
+#mediaGrid > *, #vxFlyersGrid > *, #vxProofsGrid > * {
+  background: #fff !important; border: 1px solid var(--vg-line) !important;
+  border-radius: 20px !important; overflow: hidden;
+}
+#homeFeaturedGrid img, #shopProductGrid img { background: #f7f7f7; object-fit: contain; }
+#shopProductGrid .h-52 { height: 230px !important; padding: 16px; }
+#autosGrid img { border-radius: 14px !important; }
+#shopProductGrid h4, #homeFeaturedGrid h4, #autosGrid h4, #mediaGrid h4 {
+  color: var(--vg-ink) !important; font-family: Manrope, sans-serif;
+}
+#shopProductGrid .text-slate-300, #homeFeaturedGrid .text-slate-300,
+#autosGrid .text-slate-300, #mediaGrid .text-slate-300 { color: #68707b !important; }
+#shopProductGrid .border-t, #autosGrid .border-t { border-color: var(--vg-line) !important; }
+#view-find-device .liquid-glass-dark { padding: 28px !important; }
+#view-find-device button:not(.gradient-orange) {
+  background: #f7f7f7 !important; color: #25282c !important;
+  border: 1px solid #e4e5e7 !important; border-radius: 14px !important;
+}
+#view-find-device button:hover { border-color: var(--vg-orange) !important; }
+#view-veexchange .space-y-4 h3 { color: var(--vg-ink) !important; border-color: var(--vg-line) !important; }
+#view-veexchange .space-y-4 h3 i { color: var(--vg-orange) !important; }
+#view-checkout .liquid-glass, #view-checkout .liquid-glass-dark {
+  padding: 24px !important; background: #fff !important;
+}
+#view-checkout h3 { color: var(--vg-ink) !important; }
+#view-checkout .bg-brandCharcoal\/90 { background: #fff8f5 !important; }
+#view-checkout .text-brandOrange { color: var(--vg-orange) !important; }
+#view-admin > .bg-brandCharcoal\/90 {
+  background: #fff !important; border: 1px solid var(--vg-line) !important;
+  box-shadow: var(--vg-shadow);
+}
+#view-admin h2, #view-admin h3 { color: var(--vg-ink) !important; }
+#view-admin > .flex.border-b { border-color: var(--vg-line) !important; }
+#view-admin table { color: #333 !important; }
+#view-admin thead { background: #f5f6f7 !important; color: #646b73 !important; }
+#view-admin tbody { color: #34383d !important; }
+#view-admin tbody tr { border-color: var(--vg-line) !important; }
+#view-admin .liquid-glass { box-shadow: none !important; }
+footer {
+  background: #fff !important; color: #68707b !important;
+  border-top: 1px solid var(--vg-line) !important;
+}
+footer strong { color: var(--vg-ink) !important; }
+footer a { color: #4d535b; }
+footer a:hover { color: var(--vg-orange) !important; }
+#cartDrawer, #adminAuthModal, #deviceDetailsModal, #productModal,
+#autoModal, #vxMediaModal, #videoModal {
+  color: var(--vg-ink);
+}
+#deviceDetailsModal > div, #adminAuthModal > div, #productModal > div,
+#autoModal > div, #vxMediaModal > div, #videoModal > div {
+  background: #fff !important; color: var(--vg-ink) !important;
+  border: 1px solid var(--vg-line) !important; box-shadow: 0 24px 70px rgba(0,0,0,.2);
+}
+#deviceDetailsModal h3, #deviceDetailsModal h4, #deviceDetailsModal strong,
+#adminAuthModal h3, #productModal h3, #autoModal h3,
+#vxMediaModal h3, #videoModal h3 { color: var(--vg-ink) !important; }
+#deviceDetailsModal .text-slate-300, #deviceDetailsModal .text-slate-400,
+#adminAuthModal .text-slate-300, #productModal .text-slate-300,
+#autoModal .text-slate-300, #vxMediaModal .text-slate-300,
+#videoModal .text-slate-300 { color: #68707b !important; }
+#deviceDetailsModal .bg-white\/5, #deviceDetailsModal .bg-brandDark\/80 {
+  background: #f6f7f8 !important; border-color: var(--vg-line) !important;
+}
+#cartDrawer { background: #fff !important; color: var(--vg-ink) !important; }
+#cartDrawer h3, #cartDrawer h4 { color: var(--vg-ink) !important; }
+#toastNotification > div { background: #fff !important; color: var(--vg-ink) !important; }
+#imageLightboxModal { background: rgba(12,12,12,.96) !important; }
+#imageLightboxModal .text-white { color: #fff !important; }
+#imageLightboxModal button { color: #fff !important; }
+#imageLightboxModal #lbCaption { color: #eee !important; }
+@media (min-width: 1024px) {
+  #view-home > div:first-child { min-height: 430px; }
+  #view-home > div:first-child::after { right: 5%; }
+}
+@media (max-width: 767px) {
+  main.max-w-7xl { padding: 18px 15px 44px !important; }
+  header .max-w-7xl { padding-left: 15px; padding-right: 15px; }
+  #brandHeaderLogo h1 { font-size: 11px !important; letter-spacing: -.025em; }
+  #brandHeaderLogo .vg-logo-badge { width: 38px !important; height: 38px !important; }
+  #view-home { gap: 34px !important; }
+  #view-home > div:first-child { min-height: 350px; padding: 26px 22px !important; text-align: left !important; }
+  #view-home > div:first-child::after { right: 5%; top: 76%; font-size: 112px; }
+  #view-home h2 { font-size: clamp(34px, 10vw, 48px) !important; }
+  #view-home p { font-size: 13px !important; }
+  #view-home .flex.flex-wrap { justify-content: flex-start !important; }
+  #view-home .grid.grid-cols-2.md\:grid-cols-4 { gap: 10px !important; }
+  #view-home .grid.grid-cols-2.md\:grid-cols-4 > * { padding: 14px 10px !important; }
+  #view-shop > .liquid-glass, #view-automobiles > .liquid-glass,
+  #view-media > .liquid-glass, #view-veexchange > .liquid-glass,
+  #view-find-device > .liquid-glass { padding: 22px !important; }
+  #shopProductGrid .h-52 { height: 205px !important; }
+  #view-checkout .liquid-glass, #view-checkout .liquid-glass-dark { padding: 18px !important; }
+  #view-admin > .flex { align-items: stretch; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
