@@ -1,0 +1,68 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "products": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["category", "brand", "price", "availability", "featured"]
+    },
+    "inventory": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "deviceCatalogue": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["deviceType", "priceEstimate", "targetUsage"]
+    },
+    "orders": {
+      "$orderId": {
+        ".read": "auth != null || (query.orderByChild == 'orderRef' && query.equalTo == data.child('orderRef').val())",
+        ".write": "true",
+        ".validate": "newData.hasChildren(['orderRef', 'customerName', 'customerPhone', 'items', 'totalAmount'])"
+      },
+      ".read": "auth != null",
+      ".indexOn": ["orderRef", "paymentStatus", "orderStatus", "createdAt"]
+    },
+    "automobiles": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["make", "model", "year", "price", "availability"]
+    },
+    "automobileEnquiries": {
+      ".read": "auth != null",
+      ".write": "true"
+    },
+    "veexchange": {
+      "rates": {
+        ".read": true,
+        ".write": "auth != null"
+      },
+      "enquiries": {
+        ".read": "auth != null",
+        ".write": "true",
+        ".indexOn": ["enquiryRef", "createdAt"]
+      }
+    },
+    "media": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["status", "category", "createdAt"]
+    },
+    "promotions": {
+      ".read": true,
+      ".write": "auth != null",
+      ".indexOn": ["status", "startDate", "endDate"]
+    },
+    "publicSettings": {
+      ".read": true,
+      ".write": "auth != null"
+    },
+    "auditLogs": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      ".indexOn": ["timestamp", "action"]
+    }
+  }
+}

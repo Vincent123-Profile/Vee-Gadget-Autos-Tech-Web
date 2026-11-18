@@ -1,0 +1,33 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Public Product & Vehicle Photography (Read by anyone, write by Admin only)
+    match /products/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 10 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*|video/.*');
+    }
+    
+    match /automobiles/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 25 * 1024 * 1024
+                   && request.resource.contentType.matches('image/.*|video/.*');
+    }
+
+    match /media/{allPaths=**} {
+      allow read: if true;
+      allow write: if request.auth != null
+                   && request.resource.size < 15 * 1024 * 1024;
+    }
+
+    // Customer Payment Receipts (Write by guest users upon checkout, Read exclusively by Admin)
+    match /receipts/{orderRef}/{fileName} {
+      allow read: if request.auth != null;
+      allow write: if request.resource.size < 8 * 1024 * 1024
+                   && (request.resource.contentType.matches('image/.*') || request.resource.contentType == 'application/pdf');
+    }
+  }
+}

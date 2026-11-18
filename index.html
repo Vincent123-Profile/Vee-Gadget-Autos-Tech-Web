@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Vee Gadget Autos Tech | Official Portal & Admin Inventory System</title>
+  <meta name="description" content="Official website of Vee Gadget Autos Tech (RC 9677040). Shop smartphones, MacBooks, vehicles, AUD & crypto exchange, and watch video reviews." />
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandOrange: '#F14C15',
+            brandOrangeHover: '#D83E0C',
+            brandDark: '#070709',
+            brandCharcoal: '#111115',
+            brandGreyDark: '#1C1C22',
+            brandGreyLight: '#E2E8F0'
+          },
+          boxShadow: {
+            glass: '0 8px 32px 0 rgba(0, 0, 0, 0.45)',
+            glowOrange: '0 0 30px rgba(241, 76, 21, 0.45)',
+            glowLogo: '0 0 20px rgba(241, 76, 21, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.4)'
+          },
+          animation: {
+            'pulse-glow': 'pulseGlow 3s infinite alternate ease-in-out',
+            'shimmer': 'shimmerSweep 4s infinite linear'
+          },
+          keyframes: {
+            pulseGlow: {
+              '0%': { boxShadow: '0 0 15px rgba(241, 76, 21, 0.4), inset 0 0 10px rgba(255, 255, 255, 0.2)' },
+              '100%': { boxShadow: '0 0 35px rgba(241, 76, 21, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.6)' }
+            },
+            shimmerSweep: {
+              '0%': { backgroundPosition: '-200% 0' },
+              '100%': { backgroundPosition: '200% 0' }
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- FontAwesome Icons CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Firebase Compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-database-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
+
+  <style>
+    /* Liquid Glass Aesthetic Engine */
+    .liquid-glass {
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .liquid-glass::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -120%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+      transition: 0.6s ease;
+      pointer-events: none;
+    }
+    .liquid-glass:hover::before { left: 120%; }
+    .liquid-glass:hover {
+      transform: translateY(-4px) scale(1.006);
+      border-color: rgba(241, 76, 21, 0.6);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7), 0 0 30px rgba(241, 76, 21, 0.25);
+    }
+
+    .liquid-glass-dark {
+      background: rgba(17, 17, 21, 0.94);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 1px solid rgba(241, 76, 21, 0.4);
+      box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.75);
+    }
+
+    .liquid-nav {
+      background: rgba(7, 7, 9, 0.88);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .vg-logo-badge {
+      background: linear-gradient(135deg, #F14C15 0%, #7C1D02 50%, #F14C15 100%);
+      background-size: 200% 200%;
+      animation: logoGradient 4s ease infinite;
+      position: relative;
+    }
+    @keyframes logoGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .gradient-orange { background: linear-gradient(135deg, #F14C15 0%, #B83206 100%); }
+    .gradient-text { background: linear-gradient(135deg, #FFFFFF 30%, #F14C15 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    
+    .ambient-orb {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(130px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.35;
+      animation: floatOrb 14s infinite alternate ease-in-out;
+    }
+    .orb-1 { top: -120px; left: -120px; width: 450px; height: 450px; background: rgba(241, 76, 21, 0.28); }
+    .orb-2 { bottom: 5%; right: -120px; width: 500px; height: 500px; background: rgba(16, 185, 129, 0.18); }
+
+    @keyframes floatOrb {
+      0% { transform: translate(0, 0) scale(1); }
+      100% { transform: translate(50px, 70px) scale(1.15); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #070709; }
+    ::-webkit-scrollbar-thumb { background: #1C1C22; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #F14C15; }
+  </style>
+</head>
+<body class="bg-brandDark text-slate-100 min-h-screen flex flex-col font-sans antialiased selection:bg-brandOrange selection:text-white overflow-x-hidden relative">
+
+  <!-- Ambient Background Orbs -->
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="toastNotification" class="fixed top-5 right-5 z-50 transform translate-y-[-150%] opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-brandCharcoal text-white border-l-4 border-brandOrange px-5 py-4 rounded-2xl shadow-2xl flex items-center space-x-3 text-xs sm:text-sm font-semibold liquid-glass">
+      <i id="toastIcon" class="fa-solid fa-circle-check text-brandOrange text-xl"></i>
+      <span id="toastMessage">Action completed successfully!</span>
+    </div>
+  </div>
+
+  <!-- NAVIGATION HEADER -->
+  <header class="liquid-nav text-white sticky top-0 z-40 border-b border-white/10 no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3.5 flex items-center justify-between">
+      
+      <!-- Brand Animated Logo & Secret Admin Trigger (Triple Click) -->
+      <div id="brandHeaderLogo" class="flex items-center space-x-3 cursor-pointer select-none group" title="Vee Gadget Autos Tech (Triple Click for Admin Portal)">
+        <div class="w-11 h-11 vg-logo-badge text-white rounded-2xl flex items-center justify-center font-black text-xl shadow-glowLogo border border-white/40 animate-pulse-glow transform transition duration-500 group-hover:rotate-12 group-hover:scale-110">
+          <span class="tracking-tighter drop-shadow-md">VG</span>
+        </div>
+        <div>
+          <h1 class="text-sm sm:text-lg font-black tracking-wider text-white leading-none group-hover:text-brandOrange transition">VEE GADGET AUTOS TECH</h1>
+          <p class="text-[9px] sm:text-[10px] text-brandOrange font-extrabold tracking-widest mt-0.5 uppercase">RC 9677040 • OFFICIAL PORTAL</p>
+        </div>
+      </div>
+
+      <!-- Desktop Nav Links -->
+      <nav class="hidden lg:flex items-center space-x-6 text-xs font-bold uppercase tracking-wider text-slate-300">
+        <a href="#home" class="hover:text-brandOrange transition">Home</a>
+        <a href="#shop" class="hover:text-brandOrange transition">Gadgets Store</a>
+        <a href="#find-device" class="hover:text-brandOrange transition">Find My Device</a>
+        <a href="#automobiles" class="hover:text-brandOrange transition">Autos Market</a>
+        <a href="#veexchange" class="hover:text-brandOrange transition">VeeXchange</a>
+        <a href="#media" class="hover:text-brandOrange transition">Vee Media</a>
+        <a href="https://veegadgetautostech.netlify.app/" target="_blank" rel="noopener noreferrer" class="text-brandOrange font-black flex items-center space-x-1.5 hover:underline">
+          <i class="fa-solid fa-truck-fast"></i>
+          <span>Live Tracking App ↗</span>
+        </a>
+      </nav>
+
+      <!-- Cart Button & Quick WhatsApp -->
+      <div class="flex items-center space-x-3">
+        <button onclick="toggleCartDrawer()" class="relative p-2.5 bg-white/5 hover:bg-white/10 rounded-xl text-white transition border border-white/10">
+          <i class="fa-solid fa-cart-shopping"></i>
+          <span id="cartBadgeCount" class="absolute -top-1 -right-1 bg-brandOrange text-white text-[10px] font-black w-5 h-5 rounded-full flex items-center justify-center border-2 border-brandDark">0</span>
+        </button>
+        <a href="https://wa.me/2348141109213" target="_blank" class="hidden sm:flex bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl items-center space-x-1.5 shadow transition">
+          <i class="fa-brands fa-whatsapp text-sm"></i>
+          <span>WhatsApp</span>
+        </a>
+        <button onclick="toggleMobileNav()" class="lg:hidden p-2 text-slate-300 hover:text-white">
+          <i class="fa-solid fa-bars text-xl"></i>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Mobile Drawer Nav -->
+    <div id="mobileNavMenu" class="hidden lg:hidden bg-brandCharcoal border-b border-white/10 px-4 py-3 space-y-2 text-xs font-bold uppercase tracking-wider">
+      <a href="#home" onclick="toggleMobileNav()" class="block py-2 text-slate-300 hover:text-brandOrange">Home</a>
+      <a href="#shop" onclick="toggleMobileNav()" class="block py-2 text-slate-300 hover:text-brandOrange">Gadgets Store</a>
+      <a href="#find-device" onclick="toggleMobileNav()" class="block py-2 text-slate-300 hover:text-brandOrange">Find My Device</a>
+      <a href="#automobiles" onclick="toggleMobileNav()" class="block py-2 text-slate-300 hover:text-brandOrange">Autos Market</a>
+      <a href="#veexchange" onclick="toggleMobileNav()" class="block py-2 text-slate-300 hover:text-brandOrange">VeeXchange Proofs & Rates</a>
+      <a href="#media" onclick="toggleMobileNav()" class="block py-2 text-slate-300 hover:text-brandOrange">Vee Media Videos</a>
+      <a href="https://veegadgetautostech.netlify.app/" target="_blank" class="block py-2 text-brandOrange font-black">Live Package Tracking ↗</a>
+    </div>
+  </header>
+
+  <!-- MAIN VIEWS CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-6 z-10 relative">
+
+    <!-- ================= 1. HOMEPAGE ================= -->
+    <section id="view-home" class="space-y-12">
+      <div class="relative rounded-3xl overflow-hidden liquid-glass p-6 sm:p-12 border border-white/10 text-center sm:text-left">
+        <div class="max-w-3xl space-y-5">
+          <div class="inline-flex items-center space-x-2 bg-brandOrange/20 border border-brandOrange/40 text-brandOrange font-extrabold text-xs px-3.5 py-1.5 rounded-full">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>REGISTERED ENTITY • RC 9677040</span>
+          </div>
+          <h2 class="text-3xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+            TRUSTED DEALS. <br/><span class="gradient-text">PREMIUM GADGETS & CARS.</span>
+          </h2>
+          <p class="text-slate-300 text-xs sm:text-sm leading-relaxed max-w-2xl">
+            Sourcing factory-sealed smartphones, MacBooks, UK-used budget devices, and verified automobiles across Lagos, Ibadan, and Osun State with nationwide delivery.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-3">
+            <a href="#shop" class="gradient-orange hover:bg-brandOrangeHover text-white font-extrabold px-6 py-3.5 rounded-2xl text-xs sm:text-sm flex items-center space-x-2 shadow-lg hover:shadow-glowOrange transition">
+              <i class="fa-solid fa-store"></i>
+              <span>Explore Shop</span>
+            </a>
+            <a href="https://veegadgetautostech.netlify.app/" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white font-extrabold px-6 py-3.5 rounded-2xl text-xs sm:text-sm border border-white/20 flex items-center space-x-2 transition">
+              <i class="fa-solid fa-location-dot text-brandOrange"></i>
+              <span>Track Live Order ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust Badges Bar -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+        <a href="https://veegadgetautostech.netlify.app/" target="_blank" class="liquid-glass p-5 rounded-2xl border border-white/5 space-y-1 block">
+          <i class="fa-solid fa-truck-fast text-brandOrange text-2xl mb-1"></i>
+          <h4 class="font-bold text-xs text-white">Live Tracking App</h4>
+          <p class="text-[10px] text-slate-400">Open Tracking Portal ↗</p>
+        </a>
+        <div class="liquid-glass p-5 rounded-2xl border border-white/5 space-y-1">
+          <i class="fa-solid fa-circle-check text-emerald-400 text-2xl mb-1"></i>
+          <h4 class="font-bold text-xs text-white">Verified Inspection</h4>
+          <p class="text-[10px] text-slate-400">Diagnostic Reports Attached</p>
+        </div>
+        <a href="#veexchange" class="liquid-glass p-5 rounded-2xl border border-white/5 space-y-1 block">
+          <i class="fa-brands fa-bitcoin text-amber-400 text-2xl mb-1"></i>
+          <h4 class="font-bold text-xs text-white">VeeXchange Rates</h4>
+          <p class="text-[10px] text-slate-400">Crypto & AUD Account Desk</p>
+        </a>
+        <a href="#media" class="liquid-glass p-5 rounded-2xl border border-white/5 space-y-1 block">
+          <i class="fa-solid fa-play text-blue-400 text-2xl mb-1"></i>
+          <h4 class="font-bold text-xs text-white">Vee Media Videos</h4>
+          <p class="text-[10px] text-slate-400">Reviews & Demos</p>
+        </a>
+      </div>
+
+      <!-- Featured Gadgets Grid Preview -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="text-xl font-black text-white uppercase tracking-wider">Featured Inventory</h3>
+            <p class="text-slate-400 text-xs">Top picks from iPhones, MacBooks, and Android devices. Click photo or thumbnails to view up to 4 unit angles.</p>
+          </div>
+          <a href="#shop" class="text-xs font-bold text-brandOrange hover:underline">View Full Shop →</a>
+        </div>
+        <div id="homeFeaturedGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- ================= 2. GADGET SHOP ================= -->
+    <section id="view-shop" class="hidden space-y-6">
+      
+      <!-- Explanatory Header Banner -->
+      <div class="liquid-glass p-6 rounded-3xl border border-brandOrange/30 space-y-2">
+        <div class="flex items-center space-x-2 text-brandOrange font-extrabold text-xs uppercase tracking-widest">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <span>Official Gadgets Store</span>
+        </div>
+        <h2 class="text-2xl font-black text-white uppercase tracking-wider">Smartphones, MacBooks & Tech Catalog</h2>
+        <p class="text-xs text-slate-300 leading-relaxed max-w-4xl">
+          Welcome to the official <strong>Vee Gadget</strong> marketplace. Browse our live inventory of factory-sealed brand-new devices and hand-inspected UK-used iPhones, Samsung Galaxies, Google Pixels, Apple MacBooks, iPads, and gaming consoles.
+        </p>
+      </div>
+
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="text-xs font-bold text-slate-400">Filter & Search Devices:</span>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <input type="text" id="shopSearchInput" onkeyup="filterShopProducts()" placeholder="Search iPhone 18, M3 MacBook..." class="px-3.5 py-2 text-xs bg-white/5 border border-white/10 rounded-xl focus:outline-none focus:ring-2 focus:ring-brandOrange text-white placeholder-slate-500 w-full sm:w-60" />
+          
+          <select id="shopCategoryFilter" onchange="filterShopProducts()" class="px-3 py-2 text-xs bg-brandCharcoal border border-white/10 rounded-xl text-slate-200">
+            <option value="ALL">All Categories</option>
+            <option value="iPhones">iPhones</option>
+            <option value="Samsung">Samsung</option>
+            <option value="Google Pixel">Google Pixel</option>
+            <option value="MacBooks">MacBooks & Laptops</option>
+            <option value="Tablets">Tablets / iPads</option>
+            <option value="Smartwatches">Smartwatches</option>
+            <option value="Consoles">PlayStation & Gaming</option>
+            <option value="Accessories">Accessories</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="shopProductGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+    </section>
+
+    <!-- ================= 3. VEE FIND MY DEVICE WIZARD ================= -->
+    <section id="view-find-device" class="hidden max-w-3xl mx-auto space-y-6">
+      <div class="liquid-glass p-6 rounded-3xl border border-brandOrange/30 space-y-3 text-center">
+        <span class="bg-brandOrange/20 text-brandOrange font-black text-[10px] px-3.5 py-1 rounded-full uppercase border border-brandOrange/40">INTELLIGENT MATCHMAKING ENGINE</span>
+        <h2 class="text-2xl sm:text-3xl font-black text-white uppercase tracking-wider">VEE FIND MY DEVICE WIZARD</h2>
+        <p class="text-xs text-slate-300 leading-relaxed max-w-xl mx-auto">
+          Answer 4 quick questions about your budget, primary usage, brand preference, and condition. Our algorithm scans live inventory to match you with top available specs.
+        </p>
+      </div>
+
+      <div class="liquid-glass-dark p-6 sm:p-8 rounded-3xl border border-brandOrange/40 space-y-6">
+        <div class="flex items-center justify-between border-b border-white/10 pb-3 text-xs font-bold text-slate-400">
+          <span id="quizStepIndicator">Step 1 of 4</span>
+          <span id="quizStepTitle" class="text-brandOrange">Target Budget Range</span>
+        </div>
+
+        <div id="quizStep1" class="space-y-3">
+          <label class="block text-xs font-semibold text-slate-300">What is your target budget range?</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
+            <button onclick="setQuizAnswer('budget', 'LOW', 1)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">₦150,000 - ₦350,000</button>
+            <button onclick="setQuizAnswer('budget', 'MID', 1)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">₦350,000 - ₦700,000</button>
+            <button onclick="setQuizAnswer('budget', 'HIGH', 1)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">₦700,000 - ₦1,300,000</button>
+            <button onclick="setQuizAnswer('budget', 'PREMIUM', 1)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">₦1,300,000+</button>
+          </div>
+        </div>
+
+        <div id="quizStep2" class="hidden space-y-3">
+          <label class="block text-xs font-semibold text-slate-300">What will be the primary usage?</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-bold">
+            <button onclick="setQuizAnswer('usage', 'CAMERA', 2)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">📷 Pro Camera & Video Content</button>
+            <button onclick="setQuizAnswer('usage', 'BATTERY', 2)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">🔋 All-Day Battery & Office Work</button>
+            <button onclick="setQuizAnswer('usage', 'GAMING', 2)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">⚡ Heavy Gaming / Video Editing</button>
+            <button onclick="setQuizAnswer('usage', 'PROGRAMMING', 2)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 text-left transition">💻 Software & Web Development</button>
+          </div>
+        </div>
+
+        <div id="quizStep3" class="hidden space-y-3">
+          <label class="block text-xs font-semibold text-slate-300">Preferred brand / OS?</label>
+          <div class="grid grid-cols-3 gap-3 text-xs font-bold text-center">
+            <button onclick="setQuizAnswer('brand', 'APPLE', 3)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 transition">Apple (iOS/Mac)</button>
+            <button onclick="setQuizAnswer('brand', 'ANDROID', 3)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 transition">Android / Samsung</button>
+            <button onclick="setQuizAnswer('brand', 'ANY', 3)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 transition">Any Brand</button>
+          </div>
+        </div>
+
+        <div id="quizStep4" class="hidden space-y-3">
+          <label class="block text-xs font-semibold text-slate-300">Device condition preference?</label>
+          <div class="grid grid-cols-2 gap-3 text-xs font-bold text-center">
+            <button onclick="setQuizAnswer('condition', 'NEW', 4)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 transition">Brand New Sealed</button>
+            <button onclick="setQuizAnswer('condition', 'UK_USED', 4)" class="p-3.5 rounded-xl bg-white/5 hover:bg-brandOrange border border-white/10 transition">UK Used / Pre-Owned</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="quizResultsContainer" class="hidden space-y-4">
+        <div class="flex items-center justify-between border-b border-white/10 pb-2">
+          <h3 class="font-black text-white text-base">Recommended Matches</h3>
+          <button onclick="resetQuiz()" class="text-xs text-brandOrange font-bold hover:underline"><i class="fa-solid fa-rotate-right mr-1"></i>Reset Quiz</button>
+        </div>
+        <div id="quizResultsGrid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+      </div>
+    </section>
+
+    <!-- ================= 4. AUTOMOBILE MARKETPLACE ================= -->
+    <section id="view-automobiles" class="hidden space-y-6">
+      <div class="liquid-glass p-6 rounded-3xl border border-blue-500/30 space-y-2">
+        <div class="flex items-center space-x-2 text-blue-400 font-extrabold text-xs uppercase tracking-widest">
+          <i class="fa-solid fa-car-side"></i>
+          <span>Verified Vehicle Marketplace</span>
+        </div>
+        <h2 class="text-2xl font-black text-white uppercase tracking-wider">Automobile Sourcing & Car Sales</h2>
+        <p class="text-xs text-slate-300 leading-relaxed max-w-4xl">
+          Welcome to the <strong>Vee Autos</strong> marketplace. We source, inspect, and deliver foreign-used (Tokunbo), clean Nigerian-used, and brand-new vehicles.
+        </p>
+      </div>
+
+      <div id="autosGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- ================= 5. VEEXCHANGE ================= -->
+    <section id="view-veexchange" class="hidden space-y-8 max-w-5xl mx-auto">
+      <div class="liquid-glass p-6 sm:p-8 rounded-3xl border border-amber-500/40 space-y-4">
+        <div class="flex items-center space-x-2 text-amber-400 font-extrabold text-xs uppercase tracking-widest">
+          <i class="fa-brands fa-bitcoin text-lg"></i>
+          <span>Crypto Exchange & International AUD Receiving Desk</span>
+        </div>
+        
+        <div class="space-y-2">
+          <h2 class="text-2xl sm:text-3xl font-black text-white">VeeXchange | Instant Crypto & AUD Bank Transfer Desk</h2>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Trade USDT, Bitcoin, Ethereum, and e-currencies at top market rates with zero delay. In addition to crypto trading, we provide dedicated <strong>Australian Dollar (AUD) Bank Accounts</strong> — including <strong>Commonwealth Bank with PayID, BSB, and Account Numbers</strong>.
+          </p>
+        </div>
+
+        <div class="pt-2 text-center sm:text-left">
+          <a href="https://wa.me/2348141109213?text=Hello%20VeeXchange,%20I%20want%20to%20trade%20Crypto%20or%20AUD%20Funds" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-8 py-3.5 rounded-2xl text-xs shadow-lg inline-flex items-center space-x-2 transition transform hover:scale-105">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Initiate Crypto or AUD Trade on WhatsApp →</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- Rate Flyers Section -->
+      <div class="space-y-4">
+        <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-2">
+          <i class="fa-solid fa-image text-brandOrange"></i>
+          <span>Daily Rate Cards & Promotional Flyers</span>
+        </h3>
+        <div id="vxFlyersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      </div>
+
+      <!-- Customer Payout Proofs Section -->
+      <div class="space-y-4 pt-4">
+        <h3 class="text-sm font-extrabold text-white uppercase tracking-wider flex items-center space-x-2 border-b border-white/10 pb-2">
+          <i class="fa-solid fa-receipt text-emerald-400"></i>
+          <span>Verified Customer Payment & Crypto Payout Proofs</span>
+        </h3>
+        <div id="vxProofsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- ================= 6. VEE MEDIA ================= -->
+    <section id="view-media" class="hidden space-y-6">
+      <div class="liquid-glass p-6 rounded-3xl border border-purple-500/30 space-y-2">
+        <div class="flex items-center space-x-2 text-purple-400 font-extrabold text-xs uppercase tracking-widest">
+          <i class="fa-solid fa-film"></i>
+          <span>Digital Content Hub</span>
+        </div>
+        <h2 class="text-2xl font-black text-white uppercase tracking-wider">Vee Media Video Showcase</h2>
+        <p class="text-xs text-slate-300 leading-relaxed max-w-4xl">
+          Watch hands-on unboxings of sealed devices, car test drives, tech tips, and video proof of customer deliveries.
+        </p>
+      </div>
+
+      <div id="mediaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
+
+    <!-- ================= 7. CHECKOUT VIEW ================= -->
+    <section id="view-checkout" class="hidden max-w-3xl mx-auto space-y-6">
+      <div class="border-b border-white/10 pb-3">
+        <h2 class="text-2xl font-black text-white uppercase">Complete Order Checkout</h2>
+        <p class="text-slate-400 text-xs">Review your cart items and submit bank transfer details.</p>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div class="lg:col-span-5 liquid-glass p-5 rounded-3xl border border-white/10 space-y-4">
+          <h3 class="font-bold text-white text-sm border-b border-white/10 pb-2">Cart Summary</h3>
+          <div id="checkoutCartItems" class="space-y-3 max-h-60 overflow-y-auto text-xs"></div>
+          <div class="border-t border-white/10 pt-3 space-y-1 text-xs">
+            <div class="flex justify-between text-slate-400"><span>Subtotal:</span><span id="coSubtotal" class="font-mono text-white">₦0</span></div>
+            <div class="flex justify-between text-slate-400"><span>Estimated Shipping:</span><span id="coShipping" class="font-mono text-white">₦5,000</span></div>
+            <div class="flex justify-between font-black text-sm text-brandOrange pt-2 border-t border-white/10"><span>Total Payable:</span><span id="coTotal" class="font-mono">₦0</span></div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 liquid-glass-dark p-6 rounded-3xl border border-brandOrange/40 space-y-4">
+          <h3 class="font-bold text-white text-sm border-b border-white/10 pb-2">Customer & Shipping Information</h3>
+          <form onsubmit="handlePlaceOrder(event)" class="space-y-3 text-xs">
+            <input type="text" id="coName" required placeholder="Full Name *" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+            <div class="grid grid-cols-2 gap-2">
+              <input type="tel" id="coPhone" required placeholder="Phone Number *" class="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+              <input type="email" id="coEmail" required placeholder="Email Address *" class="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <input type="text" id="coState" required placeholder="Delivery State *" class="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+              <input type="text" id="coCity" required placeholder="City / Junction *" class="p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+            </div>
+            <textarea id="coAddress" required placeholder="Full Delivery Address *" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white h-20"></textarea>
+
+            <div class="bg-brandCharcoal/90 p-4 rounded-2xl border-2 border-brandOrange/60 space-y-1 text-xs shadow-glowOrange">
+              <div class="text-brandOrange font-black uppercase text-[10px] tracking-widest flex items-center space-x-1.5">
+                <i class="fa-solid fa-building-columns"></i>
+                <span>VERIFIED OFFICIAL BANK ACCOUNT</span>
+              </div>
+              <div class="text-white font-extrabold text-sm pt-1">Bank Name: Wema Bank</div>
+              <div class="text-white font-mono text-base font-black text-brandOrange tracking-wider">Account Number: 0289654120</div>
+              <div class="text-emerald-400 font-extrabold text-xs flex items-center space-x-1">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Account Name: VEE GADGET AUTOS TECH</span>
+              </div>
+            </div>
+
+            <div class="flex gap-2 pt-2">
+              <button type="submit" id="btnPlaceOrder" class="flex-1 gradient-orange hover:bg-brandOrangeHover text-white font-black py-3 rounded-xl shadow-lg transition">
+                Submit Order & Bank Transfer
+              </button>
+              <button type="button" onclick="checkoutViaWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-3 rounded-xl flex items-center justify-center">
+                <i class="fa-brands fa-whatsapp text-base"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= 8. PROTECTED ADMIN DASHBOARD ================= -->
+    <section id="view-admin" class="hidden space-y-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-brandCharcoal/90 backdrop-blur-xl p-5 rounded-3xl border border-white/10">
+        <div>
+          <h2 class="text-lg font-black text-white flex items-center space-x-2">
+            <span>Admin Inventory System</span>
+            <span class="bg-brandOrange text-white text-[10px] px-2.5 py-0.5 rounded-full uppercase">Authenticated</span>
+          </h2>
+          <p class="text-xs text-slate-400">Complete Spec Engine, Inventory Tracking & Realtime Device Management.</p>
+        </div>
+
+        <button onclick="logoutAdmin()" class="bg-red-600/20 text-red-300 hover:bg-red-600 hover:text-white text-xs font-bold px-3.5 py-2 rounded-xl transition">
+          <i class="fa-solid fa-right-from-bracket mr-1"></i>Logout Admin
+        </button>
+      </div>
+
+      <!-- Admin Navigation Tabs -->
+      <div class="flex border-b border-white/10 text-xs font-bold text-slate-400 space-x-4 overflow-x-auto pb-1">
+        <button id="admTabBtnProducts" onclick="switchAdminTab('products')" class="py-2.5 border-b-2 border-brandOrange text-brandOrange whitespace-nowrap">Gadgets Inventory</button>
+        <button id="admTabBtnOrders" onclick="switchAdminTab('orders')" class="py-2.5 border-b-2 border-transparent hover:text-brandOrange whitespace-nowrap">Orders & Receipts</button>
+        <button id="admTabBtnAutos" onclick="switchAdminTab('autos')" class="py-2.5 border-b-2 border-transparent hover:text-brandOrange whitespace-nowrap">Automobiles</button>
+        <button id="admTabBtnVx" onclick="switchAdminTab('vx')" class="py-2.5 border-b-2 border-transparent hover:text-brandOrange whitespace-nowrap">VeeXchange Media</button>
+        <button id="admTabBtnMedia" onclick="switchAdminTab('media')" class="py-2.5 border-b-2 border-transparent hover:text-brandOrange whitespace-nowrap">VeeMedia Videos</button>
+      </div>
+
+      <!-- TAB 1: PRODUCTS MANAGER -->
+      <div id="admTabProducts" class="space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-white text-sm">Gadgets Inventory Catalogue</h3>
+          <button onclick="openProductModal()" class="gradient-orange text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i class="fa-solid fa-plus"></i><span>+ Add New Gadget Unit</span>
+          </button>
+        </div>
+        <div class="liquid-glass rounded-2xl border border-white/10 overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[760px]">
+            <thead class="bg-brandCharcoal text-slate-400 font-bold border-b border-white/10 uppercase text-[10px]">
+              <tr>
+                <th class="p-3">Device / Model</th>
+                <th class="p-3">Category Tag</th>
+                <th class="p-3">Qty & Status</th>
+                <th class="p-3">Color & Config</th>
+                <th class="p-3">Condition & Health</th>
+                <th class="p-3">Price</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admProductsTableBody" class="divide-y divide-white/5 text-slate-300"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: ORDERS MANAGER -->
+      <div id="admTabOrders" class="hidden space-y-4">
+        <h3 class="font-bold text-white text-sm">Inbound Customer Orders</h3>
+        <div class="liquid-glass rounded-2xl border border-white/10 overflow-x-auto">
+          <table class="w-full text-left text-xs min-w-[640px]">
+            <thead class="bg-brandCharcoal text-slate-400 font-bold border-b border-white/10 uppercase text-[10px]">
+              <tr>
+                <th class="p-3">Order Ref</th>
+                <th class="p-3">Customer</th>
+                <th class="p-3">Amount</th>
+                <th class="p-3">Status</th>
+                <th class="p-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admOrdersTableBody" class="divide-y divide-white/5 text-slate-300"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 3: AUTOMOBILES MANAGER -->
+      <div id="admTabAutos" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-white text-sm">Vehicle Inventory</h3>
+          <button onclick="openAutoModal()" class="gradient-orange text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i class="fa-solid fa-car"></i><span>Add Automobile</span>
+          </button>
+        </div>
+        <div id="admAutosGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- TAB 4: VEEXCHANGE FLYERS & PROOFS MANAGER -->
+      <div id="admTabVx" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-white text-sm">VeeXchange Rate Cards & Payout Proofs</h3>
+          <button onclick="openVxMediaModal()" class="gradient-orange text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i class="fa-solid fa-upload"></i><span>Upload Flyer / Proof</span>
+          </button>
+        </div>
+        <div id="admVxGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+
+      <!-- TAB 5: VEEMEDIA VIDEOS MANAGER -->
+      <div id="admTabMedia" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-white text-sm">VeeMedia Video Posts</h3>
+          <button onclick="openVideoModal()" class="gradient-orange text-white font-bold px-4 py-2 rounded-xl text-xs flex items-center space-x-1.5 shadow">
+            <i class="fa-solid fa-video"></i><span>Add Video Post</span>
+          </button>
+        </div>
+        <div id="admMediaGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODALS CONTAINER -->
+
+  <!-- 0. IMAGE LIGHTBOX ENLARGEMENT & GALLERY MODAL -->
+  <div id="imageLightboxModal" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-50 hidden flex flex-col justify-between p-4 no-print select-none">
+    <div class="flex justify-between items-center text-white z-10">
+      <span id="lbCounter" class="text-xs font-mono font-bold bg-white/10 px-3 py-1 rounded-full border border-white/10">1 / 1</span>
+      <div class="flex items-center space-x-3">
+        <button id="lbBtnDownload" class="bg-brandOrange hover:bg-brandOrangeHover text-white text-xs font-bold px-3.5 py-1.5 rounded-xl flex items-center space-x-1.5 shadow">
+          <i class="fa-solid fa-download"></i><span>Download Photo</span>
+        </button>
+        <button onclick="closeLightbox()" class="text-slate-400 hover:text-white text-2xl p-1"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+    </div>
+
+    <div class="relative flex-1 flex items-center justify-center my-4 overflow-hidden">
+      <button onclick="prevLightboxImage()" class="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-brandOrange text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg shadow border border-white/20 z-10 transition">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+
+      <img id="lbMainImage" src="" class="max-h-[80vh] max-w-full object-contain rounded-2xl border border-white/10 shadow-2xl transition duration-300" />
+
+      <button onclick="nextLightboxImage()" class="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-brandOrange text-white w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-lg shadow border border-white/20 z-10 transition">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+
+    <!-- Lightbox Thumbnails Strip -->
+    <div id="lbThumbStrip" class="flex justify-center items-center space-x-2 py-2 overflow-x-auto z-10"></div>
+
+    <div class="text-center text-xs text-slate-300 font-bold truncate pb-2" id="lbCaption">
+      Image Preview
+    </div>
+  </div>
+
+  <!-- 1. DYNAMIC ITEM DETAILS MODAL -->
+  <div id="deviceDetailsModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-brandCharcoal rounded-3xl max-w-3xl w-full flex flex-col max-h-[92vh] overflow-hidden border border-brandOrange/40 shadow-2xl">
+      <div class="p-4 border-b border-white/10 flex justify-between items-center">
+        <div class="flex items-center space-x-2 truncate">
+          <h3 id="ddModalTitle" class="font-black text-white text-base truncate">Item Specifications</h3>
+          <span id="ddModalStatusBadge" class="hidden text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase"></span>
+        </div>
+        <button onclick="closeModal('deviceDetailsModal')" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div class="p-5 space-y-5 overflow-y-auto flex-1 text-slate-300 text-xs">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="space-y-2">
+            <div class="font-bold text-white text-xs uppercase flex items-center justify-between">
+              <span>Item Photo Gallery (Max 4 Photos)</span>
+              <div class="flex items-center space-x-2">
+                <button id="ddBtnEnlargeImg" class="text-brandOrange hover:underline text-[11px] font-bold"><i class="fa-solid fa-maximize mr-1"></i>Enlarge</button>
+                <button id="ddBtnDownloadImg" class="text-slate-400 hover:text-white text-[11px] font-bold"><i class="fa-solid fa-download mr-1"></i>Save</button>
+              </div>
+            </div>
+            
+            <!-- Main Photo Display -->
+            <div class="relative cursor-pointer group" id="ddImgWrapper">
+              <img id="ddModalImg" src="" class="w-full h-56 object-cover rounded-2xl border border-white/10 shadow-lg" />
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-2xl flex items-center justify-center text-white font-bold text-xs space-x-1.5">
+                <i class="fa-solid fa-magnifying-glass-plus text-base"></i>
+                <span>Click for Full Screen Lightbox</span>
+              </div>
+            </div>
+
+            <!-- Thumbnail Carousel Selector (Up to 4 images) -->
+            <div id="ddModalThumbnails" class="flex items-center space-x-2 pt-1"></div>
+          </div>
+
+          <div class="space-y-2">
+            <div class="font-bold text-white text-xs uppercase flex items-center justify-between">
+              <span>Video Review / Inspection</span>
+              <button id="ddBtnDownloadVid" class="text-brandOrange hover:underline text-[11px] font-bold hidden"><i class="fa-solid fa-download mr-1"></i>Download Video</button>
+            </div>
+            <div id="ddModalVideoContainer" class="w-full h-56 bg-black rounded-2xl overflow-hidden border border-white/10 flex items-center justify-center">
+              <span class="text-slate-500 text-xs">No video attached for this item.</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 bg-white/5 p-3 rounded-2xl border border-white/5 text-center">
+          <div><span class="text-slate-400 block text-[10px]">Price</span><strong id="ddModalPrice" class="font-mono text-brandOrange text-base">₦0</strong></div>
+          <div><span class="text-slate-400 block text-[10px]">Category Tag</span><strong id="ddModalCondition" class="text-white">UK Used</strong></div>
+          <div><span class="text-slate-400 block text-[10px]">Storage / RAM</span><strong id="ddModalStorage" class="text-white">N/A</strong></div>
+          <div><span class="text-slate-400 block text-[10px]">Available Qty</span><strong id="ddModalStockQty" class="text-emerald-400">1 Unit</strong></div>
+        </div>
+
+        <div id="ddDiagnosticsBox" class="bg-brandDark/80 p-3.5 rounded-2xl border border-white/10 space-y-2">
+          <h4 class="font-bold text-brandOrange text-[11px] uppercase tracking-wider">Unit Configuration & Diagnostic Checks</h4>
+          <div id="ddModalBadges" class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[10px]"></div>
+        </div>
+
+        <div class="space-y-2 border-t border-white/10 pt-4">
+          <h4 class="font-bold text-white text-xs uppercase tracking-wider">Detailed Description & Inspection Notes</h4>
+          <p id="ddModalDescription" class="bg-white/5 p-4 rounded-2xl border border-white/5 text-slate-300 leading-relaxed text-xs whitespace-pre-line"></p>
+        </div>
+
+        <div class="flex gap-3 pt-2">
+          <button id="ddBtnAddToCart" class="flex-1 gradient-orange hover:bg-brandOrangeHover text-white font-black py-3 rounded-xl shadow-lg transition">
+            + Add to Cart
+          </button>
+          <a id="ddBtnWhatsApp" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-5 py-3 rounded-xl flex items-center justify-center space-x-1.5">
+            <i class="fa-brands fa-whatsapp text-lg"></i>
+            <span>Inquire</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. CART DRAWER MODAL -->
+  <div id="cartDrawer" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex justify-end no-print">
+    <div class="bg-brandCharcoal w-full max-w-md h-full flex flex-col p-5 space-y-4 border-l border-white/10">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="font-black text-white text-base flex items-center space-x-2">
+          <i class="fa-solid fa-cart-shopping text-brandOrange"></i>
+          <span>Your Shopping Cart</span>
+        </h3>
+        <button onclick="toggleCartDrawer()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <div id="cartDrawerItems" class="flex-grow overflow-y-auto space-y-3 text-xs"></div>
+
+      <div class="border-t border-white/10 pt-4 space-y-3">
+        <div class="flex justify-between font-black text-white text-sm">
+          <span>Subtotal:</span>
+          <span id="cartDrawerSubtotal" class="font-mono text-brandOrange">₦0</span>
+        </div>
+        <button onclick="proceedToCheckout()" class="w-full gradient-orange text-white font-black py-3 rounded-xl shadow-lg">
+          Proceed to Checkout →
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ADMIN AUTH MODAL -->
+  <div id="adminAuthModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="liquid-glass-dark rounded-3xl max-w-sm w-full p-6 space-y-4 border border-brandOrange/40">
+      <div class="text-center">
+        <div class="w-12 h-12 vg-logo-badge text-white rounded-2xl flex items-center justify-center text-xl font-black mx-auto mb-2 shadow-glowLogo">VG</div>
+        <h3 class="text-lg font-black text-white">Administrator Portal</h3>
+        <p class="text-xs text-slate-400">Sign in with Admin credentials.</p>
+      </div>
+
+      <form onsubmit="handleAdminLogin(event)" class="space-y-3 text-xs">
+        <input type="email" id="admEmail" required placeholder="Admin Email *" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+        <input type="password" id="admPass" required placeholder="Master Password *" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+        <button type="submit" class="w-full gradient-orange text-white font-black py-2.5 rounded-xl shadow-lg">Authenticate Dashboard</button>
+      </form>
+      <button onclick="closeModal('adminAuthModal')" class="w-full text-center text-xs text-slate-400">Cancel</button>
+    </div>
+  </div>
+
+  <!-- 4. ADVANCED GADGET INVENTORY MODAL (WITH COMPLETE iPHONE SPEC ENGINE) -->
+  <div id="productModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-brandCharcoal rounded-3xl max-w-4xl w-full flex flex-col max-h-[94vh] overflow-hidden border border-white/10">
+      <div class="p-4 border-b border-white/10 flex justify-between items-center">
+        <h3 id="pmModalHeading" class="font-bold text-white text-sm">Add / Edit Gadget Listing</h3>
+        <button onclick="closeModal('productModal')" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form onsubmit="handleSaveProduct(event)" class="p-5 space-y-4 text-xs overflow-y-auto flex-1 text-slate-300">
+        <input type="hidden" id="pmEditId" value="" />
+
+        <!-- 1. COMPREHENSIVE AUTO SPEC PRESET SELECTOR (ALL iPHONES INCLUDED) -->
+        <div class="bg-brandDark/90 p-4 rounded-2xl border border-brandOrange/40 space-y-2">
+          <div class="flex items-center justify-between">
+            <label class="font-extrabold text-brandOrange uppercase text-[11px] tracking-wider">⚡ Automatic Spec Lookup System (All iPhone Series Included)</label>
+            <span class="text-[10px] text-slate-400">Select any iPhone to auto-fill specs</span>
+          </div>
+          <select id="pmPresetSelect" onchange="applyDevicePreset(this.value)" class="w-full p-2.5 bg-brandCharcoal border border-brandOrange/60 rounded-xl text-white font-bold">
+            <option value="">-- Choose Device Model Preset (Auto-Fill Official Specs) --</option>
+            
+            <optgroup label="Apple iPhones (Legacy & Classic Series)">
+              <option value="IPHONE_6">iPhone 6 (4.7'', Apple A8, 1GB RAM)</option>
+              <option value="IPHONE_6P">iPhone 6 Plus (5.5'', Apple A8, 1GB RAM)</option>
+              <option value="IPHONE_6S">iPhone 6s (4.7'', Apple A9, 2GB RAM)</option>
+              <option value="IPHONE_6SP">iPhone 6s Plus (5.5'', Apple A9, 2GB RAM)</option>
+              <option value="IPHONE_SE1">iPhone SE 1st Gen (4.0'', Apple A9, 2GB RAM)</option>
+              <option value="IPHONE_7">iPhone 7 (4.7'', Apple A10 Fusion, 2GB RAM)</option>
+              <option value="IPHONE_7P">iPhone 7 Plus (5.5'', Dual 12MP, 3GB RAM)</option>
+              <option value="IPHONE_8">iPhone 8 (4.7'', Glass Back, A11 Bionic)</option>
+              <option value="IPHONE_8P">iPhone 8 Plus (5.5'', Dual 12MP, A11 Bionic)</option>
+              <option value="IPHONE_SE2">iPhone SE 2nd Gen (4.7'', Apple A13 Bionic)</option>
+              <option value="IPHONE_SE3">iPhone SE 3rd Gen (4.7'', 5G, Apple A15 Bionic)</option>
+            </optgroup>
+
+            <optgroup label="Apple iPhones (X, XR, XS & 11 Series)">
+              <option value="IPHONE_X">iPhone X (5.8'' Super Retina OLED, Face ID)</option>
+              <option value="IPHONE_XR">iPhone XR (6.1'' Liquid Retina, A12 Bionic)</option>
+              <option value="IPHONE_XS">iPhone XS (5.8'' OLED, A12 Bionic, 4GB RAM)</option>
+              <option value="IPHONE_XSM">iPhone XS Max (6.5'' OLED, A12 Bionic)</option>
+              <option value="IPHONE_11">iPhone 11 (6.1'', Dual 12MP, A13 Bionic)</option>
+              <option value="IPHONE_11PRO">iPhone 11 Pro / 11 Pro Max (Triple 12MP, A13)</option>
+            </optgroup>
+
+            <optgroup label="Apple iPhones (12, 13 & 14 Series)">
+              <option value="IPHONE_12M">iPhone 12 Mini (5.4'' OLED, A14 Bionic, 5G)</option>
+              <option value="IPHONE_12">iPhone 12 (6.1'' Super Retina XDR, A14 Bionic)</option>
+              <option value="IPHONE_12PRO">iPhone 12 Pro / 12 Pro Max (A14 Bionic + LiDAR)</option>
+              <option value="IPHONE_13M">iPhone 13 Mini (5.4'' OLED, A15 Bionic)</option>
+              <option value="IPHONE_13">iPhone 13 (6.1'' Super Retina XDR, A15 Bionic)</option>
+              <option value="IPHONE_13PRO">iPhone 13 Pro / 13 Pro Max (120Hz ProMotion, A15)</option>
+              <option value="IPHONE_14">iPhone 14 / 14 Plus (Action Mode, Crash Detection)</option>
+              <option value="IPHONE_14PRO">iPhone 14 Pro / 14 Pro Max (48MP, Dynamic Island, A16)</option>
+            </optgroup>
+
+            <optgroup label="Apple iPhones (15, 16, 17 & 18 Series)">
+              <option value="IPHONE_15">iPhone 15 / 15 Plus (USB-C, 48MP, Dynamic Island)</option>
+              <option value="IPHONE_15PRO">iPhone 15 Pro / 15 Pro Max (A17 Pro, Titanium, 5x Zoom)</option>
+              <option value="IPHONE_16">iPhone 16 / 16 Plus (A18, Camera Control Button)</option>
+              <option value="IPHONE_16PRO">iPhone 16 Pro / 16 Pro Max (A18 Pro, 6.9'' OLED, Titanium)</option>
+              <option value="IPHONE_17">iPhone 17 / 17 Air / Slim (120Hz LTPO, A19, 12GB RAM)</option>
+              <option value="IPHONE_17PRO">iPhone 17 Pro / 17 Pro Max (A19 Pro, Vapor Chamber, 12GB RAM)</option>
+              <option value="IPHONE_18PRO">iPhone 18 Pro / 18 Pro Max (A20 Pro, Variable Aperture, 48MP Tri-Fusion)</option>
+            </optgroup>
+
+            <optgroup label="Samsung Galaxy Flagships">
+              <option value="SAM_S21U">Samsung Galaxy S21 Ultra 5G (108MP, 5000mAh)</option>
+              <option value="SAM_S22U">Samsung Galaxy S22 Ultra (S-Pen, 108MP, Snap 8 Gen 1)</option>
+              <option value="SAM_S23U">Samsung Galaxy S23 Ultra (200MP, Snap 8 Gen 2)</option>
+              <option value="SAM_S24U">Samsung Galaxy S24 Ultra (200MP, Galaxy AI, Snap 8 Gen 3)</option>
+            </optgroup>
+
+            <optgroup label="Google Pixel Series">
+              <option value="PIXEL_7P">Google Pixel 7 Pro (Tensor G2, 50MP)</option>
+              <option value="PIXEL_8P">Google Pixel 8 Pro (Tensor G3, 120Hz OLED)</option>
+              <option value="PIXEL_9P">Google Pixel 9 Pro XL (Tensor G4, Pro Camera)</option>
+            </optgroup>
+
+            <optgroup label="Apple MacBooks">
+              <option value="MAC_AIR_M1">MacBook Air M1 (13.3", 8GB/16GB Unified)</option>
+              <option value="MAC_AIR_M2">MacBook Air M2 (13.6"/15.3", M2 Chip)</option>
+              <option value="MAC_PRO_M3">MacBook Pro M3 / M3 Pro / M3 Max (14"/16" XDR)</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <!-- 2. CORE PRODUCT DETAILS -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div>
+            <label class="block mb-1 font-semibold">Category *</label>
+            <select id="pmCategory" required class="w-full p-2.5 bg-brandDark border border-white/10 rounded-xl text-white">
+              <option value="iPhones">iPhones</option>
+              <option value="Samsung">Samsung</option>
+              <option value="Google Pixel">Google Pixel</option>
+              <option value="MacBooks">MacBooks & Laptops</option>
+              <option value="Tablets">Tablets / iPads</option>
+              <option value="Smartwatches">Smartwatches</option>
+              <option value="Consoles">PlayStation & Gaming</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block mb-1 font-semibold">Product / Model Title *</label>
+            <input type="text" id="pmTitle" required placeholder="e.g. iPhone 18 Pro Max Natural Titanium" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-brandOrange">Product Tag *</label>
+            <select id="pmCondition" required class="w-full p-2.5 bg-brandDark border border-brandOrange/40 rounded-xl text-white font-bold">
+              <option value="UK Used">UK Used</option>
+              <option value="Standard Used">Standard Used</option>
+              <option value="Brand New Sealed">Brand New Sealed</option>
+              <option value="Refurbished">Refurbished</option>
+              <option value="Open Box">Open Box</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 3. INVENTORY & AVAILABILITY STATUS -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block mb-1 font-semibold">Price (NGN) *</label>
+            <input type="number" id="pmPrice" required placeholder="e.g. 1450000" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Stock Quantity Available *</label>
+            <input type="number" id="pmStock" value="1" min="0" required placeholder="e.g. 8" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-brandOrange">Availability Status *</label>
+            <select id="pmStatus" required class="w-full p-2.5 bg-brandDark border border-brandOrange/40 rounded-xl text-white font-bold">
+              <option value="In Stock">In Stock</option>
+              <option value="Sold Out">Sold Out</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- 4. SPECIFIC UNIT CONFIGURATION & CONDITION -->
+        <div class="bg-brandDark p-4 rounded-2xl border border-white/10 space-y-3">
+          <h4 class="font-bold text-white uppercase text-[10px] tracking-wider">Unit Configuration & Hardware Diagnostic Details</h4>
+          
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block mb-1">Color Option *</label>
+              <input type="text" id="pmColor" placeholder="e.g. Desert Titanium, Space Black" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+            <div>
+              <label class="block mb-1">Storage Option *</label>
+              <input type="text" id="pmStorage" required placeholder="e.g. 128GB / 256GB / 512GB" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+            <div>
+              <label class="block mb-1">Network Config *</label>
+              <select id="pmNetwork" class="w-full p-2 bg-brandDark border border-white/10 rounded-lg text-white">
+                <option value="Physical SIM + eSIM">Physical SIM + eSIM</option>
+                <option value="Dual Physical SIM">Dual Physical SIM</option>
+                <option value="eSIM Only">eSIM Only</option>
+                <option value="Wi-Fi Only">Wi-Fi Only</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1">Cosmetic Grade (1-10)</label>
+              <input type="text" id="pmCosmeticGrade" placeholder="e.g. 9.5 / 10 Pristine" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+            <div>
+              <label class="block mb-1">Screen State</label>
+              <select id="pmScreenState" class="w-full p-2 bg-brandDark border border-white/10 rounded-lg text-white">
+                <option value="Original Screen">Original Screen</option>
+                <option value="Replaced Screen">Replaced Screen</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1">Battery State</label>
+              <select id="pmBatteryState" class="w-full p-2 bg-brandDark border border-white/10 rounded-lg text-white">
+                <option value="Original Battery">Original Battery</option>
+                <option value="Replaced Battery">Replaced Battery</option>
+              </select>
+            </div>
+            <div>
+              <label class="block mb-1">Battery Health (%)</label>
+              <input type="number" id="pmBatHealth" placeholder="92" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white font-mono" />
+            </div>
+            <div>
+              <label class="block mb-1">MDM Lock Status</label>
+              <select id="pmMdmStatus" class="w-full p-2 bg-brandDark border border-white/10 rounded-lg text-white">
+                <option value="Clean / Unrestricted">Clean / Unrestricted</option>
+                <option value="MDM Enrolled">MDM Enrolled</option>
+                <option value="MDM Bypassed">MDM Bypassed</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
+            <label class="flex items-center space-x-1.5"><input type="checkbox" id="pmFidWorking" checked /><span>Face ID / Touch ID OK</span></label>
+            <label class="flex items-center space-x-1.5"><input type="checkbox" id="pmTtWorking" checked /><span>True Tone Working</span></label>
+            <label class="flex items-center space-x-1.5"><input type="checkbox" id="pmScrOrig" checked /><span>Original Screen</span></label>
+            <label class="flex items-center space-x-1.5"><input type="checkbox" id="pmBatOrig" checked /><span>Original Battery</span></label>
+          </div>
+        </div>
+
+        <!-- 5. AUTO-FILLED TECHNICAL SPECIFICATIONS -->
+        <div class="bg-brandDark/50 p-4 rounded-2xl border border-white/10 space-y-3">
+          <h4 class="font-bold text-slate-300 uppercase text-[10px] tracking-wider">Official Hardware Specifications</h4>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div>
+              <label class="block mb-1">Release Year</label>
+              <input type="text" id="pmYear" placeholder="2024" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+            <div>
+              <label class="block mb-1">RAM Capacity</label>
+              <input type="text" id="pmRam" placeholder="8GB RAM" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+            <div>
+              <label class="block mb-1">Processor / Chip</label>
+              <input type="text" id="pmProcessor" placeholder="Apple A18 Pro" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+            <div>
+              <label class="block mb-1">Battery Capacity</label>
+              <input type="text" id="pmBatteryCap" placeholder="4685 mAh" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block mb-1">Camera Megapixels</label>
+              <input type="text" id="pmCameraSpecs" placeholder="48MP + 48MP + 12MP Rear / 12MP Front" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+            <div>
+              <label class="block mb-1">Display Size & Specs</label>
+              <input type="text" id="pmDisplaySpecs" placeholder="6.9'' Super Retina XDR OLED 120Hz" class="w-full p-2 bg-white/5 border border-white/10 rounded-lg text-white" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. DESCRIPTION & INSPECTION NOTES -->
+        <div>
+          <label class="block mb-1 font-semibold text-brandOrange">Detailed Description & Inspection Notes *</label>
+          <textarea id="pmDescription" rows="3" placeholder="Additional details, physical condition rating, included accessories..." class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white leading-relaxed placeholder-slate-500"></textarea>
+        </div>
+
+        <!-- 7. MULTI-PHOTO UPLOAD (STRICT MAX 4 PHOTOS) & VIDEO REVIEW -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-1 font-semibold text-white">Product Photos <span class="text-brandOrange font-bold">(Select 1 to Maximum 4 Images)</span></label>
+            <input type="file" id="pmImgFiles" accept="image/*" multiple onchange="previewSelectedImages(this, 'pmPreview')" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white" />
+            <span class="text-[10px] text-slate-400 block mt-1">Upload front, back, sides, or box photos (Up to 4 images).</span>
+            <div id="pmPreview" class="mt-2 hidden flex flex-wrap gap-2"></div>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-white">Device Video Review / Inspection <span class="text-slate-400 font-normal">(Max 8MB or URL link)</span></label>
+            <input type="file" id="pmVidFile" accept="video/*" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white mb-2" />
+            <input type="text" id="pmVideoUrl" placeholder="Or paste YouTube / TikTok / Drive embed video link..." class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-2 pt-2 border-t border-white/10">
+          <button type="button" onclick="closeModal('productModal')" class="px-4 py-2 bg-white/5 rounded-xl">Cancel</button>
+          <button type="submit" id="btnSaveProduct" class="gradient-orange text-white font-bold px-5 py-2 rounded-xl">Save & Publish Gadget</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. AUTOMOBILE MANAGEMENT MODAL -->
+  <div id="autoModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-4 no-print">
+    <div class="bg-brandCharcoal rounded-3xl max-w-2xl w-full flex flex-col max-h-[92vh] overflow-hidden border border-white/10">
+      <div class="p-4 border-b border-white/10 flex justify-between items-center">
+        <h3 id="amModalHeading" class="font-bold text-white text-sm flex items-center space-x-2">
+          <i class="fa-solid fa-car text-brandOrange"></i>
+          <span>Add / Edit Automobile Listing</span>
+        </h3>
+        <button onclick="closeModal('autoModal')" class="text-slate-400"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+
+      <form onsubmit="handleSaveAuto(event)" class="p-5 space-y-4 text-xs overflow-y-auto flex-1 text-slate-300">
+        <input type="hidden" id="amEditId" value="" />
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block mb-1 font-semibold">Make / Brand *</label>
+            <input type="text" id="amMake" required placeholder="e.g. Toyota, Lexus" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Model Name *</label>
+            <input type="text" id="amModel" required placeholder="e.g. Camry, RX350" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-brandOrange">Availability Tag *</label>
+            <select id="amStatus" required class="w-full p-2.5 bg-brandDark border border-brandOrange/40 rounded-xl text-white font-bold">
+              <option value="Available">Available (In Stock)</option>
+              <option value="Sold">Sold</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block mb-1 font-semibold">Year *</label>
+            <input type="number" id="amYear" required placeholder="e.g. 2021" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Condition Grade *</label>
+            <select id="amCondition" required class="w-full p-2.5 bg-brandDark border border-white/10 rounded-xl text-white">
+              <option value="Foreign Used (Tokunbo)">Foreign Used (Tokunbo)</option>
+              <option value="Brand New 0km">Brand New 0km</option>
+              <option value="Nigerian Used (Clean)">Nigerian Used (Clean)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Price (NGN) *</label>
+            <input type="number" id="amPrice" required placeholder="e.g. 22000000" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white font-mono" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block mb-1 font-semibold">Trim / Engine Specs</label>
+            <input type="text" id="amTrim" placeholder="e.g. XLE V6 Full Option / AWD" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold">Mileage Status</label>
+            <input type="text" id="amMileage" placeholder="e.g. 42,000 km / Low Mileage" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block mb-1 font-semibold text-white">Vehicle Main Image <span class="text-slate-400 font-normal">(Leave empty to keep)</span></label>
+            <input type="file" id="amImgFile" accept="image/*" onchange="previewSelectedImage(this, 'amPreview')" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white" />
+            <div id="amPreview" class="mt-2 hidden">
+              <img id="amPreviewImg" src="" class="h-28 w-44 object-cover rounded-xl border border-brandOrange/40" />
+            </div>
+          </div>
+          <div>
+            <label class="block mb-1 font-semibold text-white">Vehicle Video Tour <span class="text-slate-400 font-normal">(Optional)</span></label>
+            <input type="file" id="amVidFile" accept="video/*" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white mb-2" />
+            <input type="text" id="amVideoUrl" placeholder="Or paste video embed link..." class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white" />
+          </div>
+        </div>
+
+        <div class="flex justify-end space-x-2 pt-2 border-t border-white/10">
+          <button type="button" onclick="closeModal('autoModal')" class="px-4 py-2 bg-white/5 rounded-xl">Cancel</button>
+          <button type="submit" id="btnSaveAuto" class="gradient-orange text-white font-bold px-5 py-2 rounded-xl">Save Vehicle</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. VEEXCHANGE MEDIA MODAL -->
+  <div id="vxMediaModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-brandCharcoal rounded-3xl max-w-md w-full p-6 space-y-4 border border-white/10 text-xs">
+      <h3 id="vxModalHeading" class="font-bold text-white text-base">Upload / Edit VeeXchange Media</h3>
+      <form onsubmit="handleSaveVxMedia(event)" class="space-y-3">
+        <input type="hidden" id="vxEditId" value="" />
+
+        <div>
+          <label class="block text-slate-300 mb-1">Category *</label>
+          <select id="vxCategory" required class="w-full p-2.5 bg-brandDark border border-white/10 rounded-xl text-white font-bold">
+            <option value="FLYER">Daily Rate Card / Flyer</option>
+            <option value="PROOF">Customer Payment & Crypto Payout Proof</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Title / Caption *</label>
+          <input type="text" id="vxTitle" required placeholder="e.g. USDT Rate @ N1,485 - Today" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1 font-semibold">Image File <span class="text-slate-400 font-normal">(Leave empty to keep)</span></label>
+          <input type="file" id="vxImgFile" accept="image/*" onchange="previewSelectedImage(this, 'vxPreview')" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white" />
+          <div id="vxPreview" class="mt-2 hidden">
+            <img id="vxPreviewImg" src="" class="h-28 w-28 object-cover rounded-xl border border-brandOrange/40" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1 font-semibold">Attached Proof Video (Optional)</label>
+          <input type="file" id="vxVidFile" accept="video/*" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white" />
+        </div>
+        <div class="flex justify-end space-x-2 pt-2">
+          <button type="button" onclick="closeModal('vxMediaModal')" class="px-4 py-2 bg-white/5 rounded-xl">Cancel</button>
+          <button type="submit" id="btnSaveVx" class="gradient-orange text-white font-bold px-5 py-2 rounded-xl">Save Record</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 7. VEEMEDIA VIDEO MODAL -->
+  <div id="videoModal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-brandCharcoal rounded-3xl max-w-md w-full p-6 space-y-4 border border-white/10 text-xs max-h-[90vh] overflow-y-auto">
+      <h3 id="vmModalHeading" class="font-bold text-white text-base">Add / Edit VeeMedia Video Post</h3>
+      <form onsubmit="handleSaveVideo(event)" class="space-y-3">
+        <input type="hidden" id="vmEditId" value="" />
+
+        <div>
+          <label class="block text-slate-300 mb-1">Video Title *</label>
+          <input type="text" id="vmTitle" required placeholder="e.g. Unboxing Sealed iPhone 18 Pro Max" class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1">Category *</label>
+          <select id="vmCategory" required class="w-full p-2.5 bg-brandDark border border-white/10 rounded-xl text-white">
+            <option value="Unboxing & Reviews">Unboxing & Reviews</option>
+            <option value="Tech Tips & Tutorials">Tech Tips & Tutorials</option>
+            <option value="Car Inspections">Car Inspections</option>
+            <option value="Customer Deliveries">Customer Deliveries</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1 font-semibold">Video File OR Embed Link</label>
+          <input type="file" id="vmVideoFile" accept="video/*" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white mb-2" />
+          <input type="text" id="vmVideoUrl" placeholder="https://www.youtube.com/embed/..." class="w-full p-2.5 bg-white/5 border border-white/10 rounded-xl text-white" />
+        </div>
+        <div>
+          <label class="block text-slate-300 mb-1 font-semibold">Cover Thumbnail Image <span class="text-slate-400 font-normal">(Leave empty to keep)</span></label>
+          <input type="file" id="vmThumbFile" accept="image/*" onchange="previewSelectedImage(this, 'vmPreview')" class="w-full p-2 bg-white/5 border border-white/10 rounded-xl text-white file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-brandOrange file:text-white" />
+          <div id="vmPreview" class="mt-2 hidden">
+            <img id="vmPreviewImg" src="" class="h-24 w-full object-cover rounded-xl border border-brandOrange/40" />
+          </div>
+        </div>
+        <div class="flex justify-end space-x-2 pt-2">
+          <button type="button" onclick="closeModal('videoModal')" class="px-4 py-2 bg-white/5 rounded-xl">Cancel</button>
+          <button type="submit" id="btnSaveVideo" class="gradient-orange text-white font-bold px-5 py-2 rounded-xl">Publish Post</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 8. VIDEO PLAYER MODAL -->
+  <div id="playerModal" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 no-print">
+    <div class="bg-brandCharcoal rounded-3xl max-w-3xl w-full p-4 space-y-3 border border-white/10">
+      <div class="flex justify-between items-center px-2">
+        <h4 id="playerTitle" class="font-bold text-white text-sm truncate">Playing Video</h4>
+        <button onclick="closeModal('playerModal')" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="playerVideoContainer" class="aspect-video w-full rounded-2xl overflow-hidden bg-black flex items-center justify-center"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer class="bg-brandCharcoal/90 backdrop-blur-xl text-slate-400 text-xs py-8 border-t border-white/10 no-print mt-12 z-10 relative">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+      <div>
+        <strong class="text-white block">VEE GADGET AUTOS TECH</strong>
+        <span>Official Registration: RC 9677040 • All Rights Reserved</span>
+      </div>
+      <div class="space-x-4 font-semibold flex flex-wrap justify-center gap-y-2">
+        <a href="#shop" class="hover:text-brandOrange">Gadgets Store</a>
+        <a href="#automobiles" class="hover:text-brandOrange">Autos</a>
+        <a href="#veexchange" class="hover:text-brandOrange">VeeXchange</a>
+        <a href="#media" class="hover:text-brandOrange">Vee Media</a>
+        <a href="https://veegadgetautostech.netlify.app/" target="_blank" class="text-brandOrange hover:underline font-bold">Live Tracking ↗</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JAVASCRIPT ENGINE -->
+  <script>
+    // 1. Firebase Configuration & Initialization
+    const firebaseConfig = {
+      apiKey: "AIzaSyDry_kH11lvjETLQ9Up9uGMh5nwW-EoQOQ",
+      authDomain: "veepay-4521d.firebaseapp.com",
+      databaseURL: "https://veepay-4521d-default-rtdb.firebaseio.com",
+      projectId: "veepay-4521d",
+      storageBucket: "veepay-4521d.appspot.com",
+      messagingSenderId: "56228740854",
+      appId: "1:56228740854:web:6f44a2b7a3e6e6133536d7",
+      measurementId: "G-0575LT8DZZ"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    const auth = firebase.auth();
+    const storage = firebase.storage();
+
+    // Global State
+    let cart = JSON.parse(localStorage.getItem('vgat_cart') || '[]');
+    let cachedProducts = [];
+    let cachedOrders = [];
+    let cachedAutos = [];
+    let cachedVxMedia = [];
+    let cachedVideos = [];
+    let isAdminLoggedIn = false;
+    let quizAnswers = {};
+
+    // Lightbox Gallery State
+    let lightboxGallery = [];
+    let lightboxIndex = 0;
+
+    // 2. COMPLETE & ACCURATE DEVICE SPECIFICATIONS DATABASE (EVERY SINGLE iPHONE INCLUDED)
+    const DEVICE_SPECS_DATABASE = {
+      // --- LEGACY & CLASSIC iPHONES ---
+      IPHONE_6: {
+        category: "iPhones", title: "iPhone 6", year: "2014",
+        storage: "16GB / 32GB / 64GB / 128GB", ram: "1GB RAM",
+        processor: "Apple A8 (20nm)", camera: "8MP Rear (f/2.2) / 1.2MP FaceTime HD",
+        display: "4.7'' Retina HD LCD (1334 x 750)", batteryCap: "1810 mAh",
+        color: "Space Gray, Silver, Gold", network: "Physical SIM (Nano-SIM)",
+        desc: "Apple A8 dual-core chip with M8 motion coprocessor. Touch ID fingerprint sensor, 1080p HD video recording at 60fps."
+      },
+      IPHONE_6P: {
+        category: "iPhones", title: "iPhone 6 Plus", year: "2014",
+        storage: "16GB / 64GB / 128GB", ram: "1GB RAM",
+        processor: "Apple A8 (20nm)", camera: "8MP Rear with Optical Image Stabilization / 1.2MP Front",
+        display: "5.5'' Retina HD LCD Full HD (1920 x 1080)", batteryCap: "2915 mAh",
+        color: "Space Gray, Silver, Gold", network: "Physical SIM (Nano-SIM)",
+        desc: "First 5.5-inch Retina HD display iPhone with Optical Image Stabilization for photos and video."
+      },
+      IPHONE_6S: {
+        category: "iPhones", title: "iPhone 6s", year: "2015",
+        storage: "16GB / 32GB / 64GB / 128GB", ram: "2GB RAM",
+        processor: "Apple A9 (64-bit architecture)", camera: "12MP Rear (f/2.2) 4K Video / 5MP FaceTime HD",
+        display: "4.7'' Retina HD LCD with 3D Touch", batteryCap: "1715 mAh",
+        color: "Space Gray, Silver, Gold, Rose Gold", network: "Physical SIM (Nano-SIM)",
+        desc: "Introduced 3D Touch pressure sensitivity, 7000 series aluminum chassis, Live Photos, and 4K video recording."
+      },
+      IPHONE_6SP: {
+        category: "iPhones", title: "iPhone 6s Plus", year: "2015",
+        storage: "16GB / 32GB / 64GB / 128GB", ram: "2GB RAM",
+        processor: "Apple A9 (64-bit architecture)", camera: "12MP Rear OIS 4K Video / 5MP FaceTime HD",
+        display: "5.5'' Retina HD LCD with 3D Touch (1920 x 1080)", batteryCap: "2750 mAh",
+        color: "Space Gray, Silver, Gold, Rose Gold", network: "Physical SIM (Nano-SIM)",
+        desc: "Apple A9 processor, 3D Touch technology, optical image stabilization, and Retina Flash for front camera."
+      },
+      IPHONE_SE1: {
+        category: "iPhones", title: "iPhone SE (1st Gen)", year: "2016",
+        storage: "16GB / 32GB / 64GB / 128GB", ram: "2GB RAM",
+        processor: "Apple A9 (64-bit architecture)", camera: "12MP Rear 4K / 1.2MP Front",
+        display: "4.0'' Retina LCD (1136 x 640)", batteryCap: "1624 mAh",
+        color: "Space Gray, Silver, Gold, Rose Gold", network: "Physical SIM (Nano-SIM)",
+        desc: "Compact 4-inch design with the flagship power of iPhone 6s, 12MP 4K camera, and Touch ID."
+      },
+      IPHONE_7: {
+        category: "iPhones", title: "iPhone 7", year: "2016",
+        storage: "32GB / 128GB / 256GB", ram: "2GB RAM",
+        processor: "Apple A10 Fusion (Quad-Core)", camera: "12MP Rear (f/1.8 OIS) / 7MP FaceTime HD",
+        display: "4.7'' Retina HD LCD (Wide Color P3)", batteryCap: "1960 mAh",
+        color: "Black, Jet Black, Silver, Gold, Rose Gold, Red", network: "Physical SIM (Nano-SIM)",
+        desc: "First water and dust-resistant iPhone (IP67), quad-core A10 Fusion chip, stereo speakers, capacitive home button."
+      },
+      IPHONE_7P: {
+        category: "iPhones", title: "iPhone 7 Plus", year: "2016",
+        storage: "32GB / 128GB / 256GB", ram: "3GB RAM",
+        processor: "Apple A10 Fusion (Quad-Core)", camera: "Dual 12MP Wide & Telephoto (2x Optical Zoom) / 7MP Front",
+        display: "5.5'' Retina HD LCD (1920 x 1080)", batteryCap: "2900 mAh",
+        color: "Black, Jet Black, Silver, Gold, Rose Gold, Red", network: "Physical SIM (Nano-SIM)",
+        desc: "First dual-camera iPhone introducing Portrait Mode with depth-of-field effect and 2x optical zoom."
+      },
+      IPHONE_8: {
+        category: "iPhones", title: "iPhone 8", year: "2017",
+        storage: "64GB / 128GB / 256GB", ram: "2GB RAM",
+        processor: "Apple A11 Bionic (6-Core)", camera: "12MP Rear (f/1.8 OIS, 4K 60fps) / 7MP Front",
+        display: "4.7'' Retina HD LCD with True Tone", batteryCap: "1821 mAh",
+        color: "Space Gray, Silver, Gold, Red", network: "Physical SIM (Nano-SIM)",
+        desc: "Durable glass back design supporting Qi wireless charging, A11 Bionic Neural Engine, True Tone display."
+      },
+      IPHONE_8P: {
+        category: "iPhones", title: "iPhone 8 Plus", year: "2017",
+        storage: "64GB / 128GB / 256GB", ram: "3GB RAM",
+        processor: "Apple A11 Bionic (6-Core)", camera: "Dual 12MP Wide & Telephoto (Portrait Lighting) / 7MP Front",
+        display: "5.5'' Retina HD LCD True Tone (1920 x 1080)", batteryCap: "2691 mAh",
+        color: "Space Gray, Silver, Gold, Red", network: "Physical SIM (Nano-SIM)",
+        desc: "Glass back design, Qi wireless charging, Dual 12MP cameras with Portrait Lighting effects."
+      },
+      IPHONE_SE2: {
+        category: "iPhones", title: "iPhone SE (2nd Gen)", year: "2020",
+        storage: "64GB / 128GB / 256GB", ram: "3GB RAM",
+        processor: "Apple A13 Bionic", camera: "12MP Rear (f/1.8 Portrait Mode) / 7MP Front",
+        display: "4.7'' Retina HD LCD True Tone", batteryCap: "1821 mAh",
+        color: "Black, White, Red", network: "Physical SIM + eSIM",
+        desc: "Compact body with flagship A13 Bionic chip, Portrait Mode photography, fast charging, IP67 water resistance."
+      },
+      IPHONE_SE3: {
+        category: "iPhones", title: "iPhone SE (3rd Gen)", year: "2022",
+        storage: "64GB / 128GB / 256GB", ram: "4GB RAM",
+        processor: "Apple A15 Bionic (5G)", camera: "12MP Rear (Deep Fusion & Smart HDR 4) / 7MP Front",
+        display: "4.7'' Retina HD LCD", batteryCap: "2018 mAh",
+        color: "Midnight, Starlight, Red", network: "Physical SIM + eSIM",
+        desc: "5G connectivity, A15 Bionic chip, improved battery life, tough Ceramic Shield glass front and back."
+      },
+
+      // --- X, XR, XS & 11 SERIES ---
+      IPHONE_X: {
+        category: "iPhones", title: "iPhone X", year: "2017",
+        storage: "64GB / 256GB", ram: "3GB RAM",
+        processor: "Apple A11 Bionic", camera: "Dual 12MP Wide & Telephoto Dual OIS / 7MP TrueDepth Front",
+        display: "5.8'' Super Retina HD OLED (2436 x 1125)", batteryCap: "2716 mAh",
+        color: "Space Gray, Silver", network: "Physical SIM (Nano-SIM)",
+        desc: "10th anniversary redesign: All-screen Super Retina OLED display, Face ID 3D facial recognition, Animoji."
+      },
+      IPHONE_XR: {
+        category: "iPhones", title: "iPhone XR", year: "2018",
+        storage: "64GB / 128GB / 256GB", ram: "3GB RAM",
+        processor: "Apple A12 Bionic (7nm)", camera: "12MP Rear (f/1.8) / 7MP TrueDepth Front",
+        display: "6.1'' Liquid Retina HD LCD (1792 x 828)", batteryCap: "2942 mAh",
+        color: "Black, White, Blue, Yellow, Coral, Red", network: "Physical SIM + eSIM",
+        desc: "A12 Bionic chip with Neural Engine, Liquid Retina HD display, Face ID, IP67 water resistance, 4K video."
+      },
+      IPHONE_XS: {
+        category: "iPhones", title: "iPhone XS", year: "2018",
+        storage: "64GB / 256GB / 512GB", ram: "4GB RAM",
+        processor: "Apple A12 Bionic (7nm)", camera: "Dual 12MP Wide & Telephoto Dual OIS / 7MP Front",
+        display: "5.8'' Super Retina HD OLED (HDR10, Dolby Vision)", batteryCap: "2658 mAh",
+        color: "Space Gray, Silver, Gold", network: "Physical SIM + eSIM",
+        desc: "Super Retina OLED display, Smart HDR photo capture, Gigabit-class LTE, IP68 water resistance."
+      },
+      IPHONE_XSM: {
+        category: "iPhones", title: "iPhone XS Max", year: "2018",
+        storage: "64GB / 256GB / 512GB", ram: "4GB RAM",
+        processor: "Apple A12 Bionic (7nm)", camera: "Dual 12MP Wide & Telephoto Dual OIS / 7MP Front",
+        display: "6.5'' Super Retina HD OLED (2688 x 1242)", batteryCap: "3174 mAh",
+        color: "Space Gray, Silver, Gold", network: "Physical SIM + eSIM",
+        desc: "Largest OLED display on an iPhone at launch, stereo audio recording, A12 Bionic chip performance."
+      },
+      IPHONE_11: {
+        category: "iPhones", title: "iPhone 11", year: "2019",
+        storage: "64GB / 128GB / 256GB", ram: "4GB RAM",
+        processor: "Apple A13 Bionic (7nm+)", camera: "Dual 12MP Ultra-Wide & Wide / 12MP Front",
+        display: "6.1'' Liquid Retina HD LCD (1792 x 828)", batteryCap: "3110 mAh",
+        color: "Black, Green, Yellow, Purple, Red, White", network: "Physical SIM + eSIM",
+        desc: "Dual camera system with Night mode, Ultra Wide lens, 4K video at 60fps, all-day battery life."
+      },
+      IPHONE_11PRO: {
+        category: "iPhones", title: "iPhone 11 Pro / 11 Pro Max", year: "2019",
+        storage: "64GB / 256GB / 512GB", ram: "4GB RAM",
+        processor: "Apple A13 Bionic (7nm+)", camera: "Triple 12MP Ultra-Wide, Wide & Telephoto / 12MP Front",
+        display: "5.8'' / 6.5'' Super Retina XDR OLED (800 nits)", batteryCap: "3046 mAh / 3969 mAh",
+        color: "Midnight Green, Space Gray, Silver, Gold", network: "Physical SIM + eSIM",
+        desc: "First Pro iPhone with Triple 12MP camera setup, Night Mode, Super Retina XDR OLED, textured matte glass."
+      },
+
+      // --- 12, 13 & 14 SERIES ---
+      IPHONE_12M: {
+        category: "iPhones", title: "iPhone 12 Mini", year: "2020",
+        storage: "64GB / 128GB / 256GB", ram: "4GB RAM",
+        processor: "Apple A14 Bionic (5nm 5G)", camera: "Dual 12MP Wide & Ultra-Wide / 12MP Front",
+        display: "5.4'' Super Retina XDR OLED (2340 x 1080)", batteryCap: "2227 mAh",
+        color: "Black, White, Red, Green, Blue, Purple", network: "Physical SIM + eSIM",
+        desc: "Ultra-compact 5.4-inch OLED display, 5G connectivity, Ceramic Shield front, MagSafe support."
+      },
+      IPHONE_12: {
+        category: "iPhones", title: "iPhone 12", year: "2020",
+        storage: "64GB / 128GB / 256GB", ram: "4GB RAM",
+        processor: "Apple A14 Bionic (5nm)", camera: "Dual 12MP Ultra-Wide & Wide / 12MP Front",
+        display: "6.1'' Super Retina XDR OLED (2532 x 1170)", batteryCap: "2815 mAh",
+        color: "Black, White, Red, Green, Blue, Purple", network: "Physical SIM + eSIM",
+        desc: "5G capability, Ceramic Shield front cover, A14 Bionic chip, MagSafe wireless charging, Dolby Vision recording."
+      },
+      IPHONE_12PRO: {
+        category: "iPhones", title: "iPhone 12 Pro / 12 Pro Max", year: "2020",
+        storage: "128GB / 256GB / 512GB", ram: "6GB RAM",
+        processor: "Apple A14 Bionic (5nm)", camera: "Triple 12MP Wide, Ultra-Wide, Telephoto + LiDAR Scanner",
+        display: "6.1'' / 6.7'' Super Retina XDR OLED", batteryCap: "2815 mAh / 3687 mAh",
+        color: "Pacific Blue, Gold, Graphite, Silver", network: "Physical SIM + eSIM",
+        desc: "LiDAR Scanner for AR and Night mode portraits, ProRAW photo support, 5x optical zoom range."
+      },
+      IPHONE_13M: {
+        category: "iPhones", title: "iPhone 13 Mini", year: "2021",
+        storage: "128GB / 256GB / 512GB", ram: "4GB RAM",
+        processor: "Apple A15 Bionic", camera: "Dual 12MP Diagonal Wide & Ultra-Wide / 12MP Front",
+        display: "5.4'' Super Retina XDR OLED", batteryCap: "2438 mAh",
+        color: "Midnight, Starlight, Blue, Pink, Green, Red", network: "Physical SIM + eSIM",
+        desc: "Cinematic Mode video, sensor-shift optical image stabilization, brighter OLED screen."
+      },
+      IPHONE_13: {
+        category: "iPhones", title: "iPhone 13", year: "2021",
+        storage: "128GB / 256GB / 512GB", ram: "4GB RAM",
+        processor: "Apple A15 Bionic (5nm)", camera: "Dual 12MP Diagonal Wide & Ultra-Wide / 12MP Front",
+        display: "6.1'' Super Retina XDR OLED (800 nits peak)", batteryCap: "3227 mAh",
+        color: "Midnight, Starlight, Blue, Pink, Green, Red", network: "Physical SIM + eSIM",
+        desc: "Cinematic mode in 1080p 30fps, sensor-shift optical image stabilization, smaller display notch."
+      },
+      IPHONE_13PRO: {
+        category: "iPhones", title: "iPhone 13 Pro / 13 Pro Max", year: "2021",
+        storage: "128GB / 256GB / 512GB / 1TB", ram: "6GB RAM",
+        processor: "Apple A15 Bionic (5nm)", camera: "Triple 12MP Macro Wide, Ultra-Wide & 3x Telephoto",
+        display: "6.1'' / 6.7'' Super Retina XDR with 120Hz ProMotion", batteryCap: "3095 mAh / 4352 mAh",
+        color: "Sierra Blue, Graphite, Gold, Silver, Alpine Green", network: "Physical SIM + eSIM",
+        desc: "120Hz ProMotion adaptive refresh rate display, Macro photography, 3x Optical Zoom, ProRes video capture."
+      },
+      IPHONE_14: {
+        category: "iPhones", title: "iPhone 14 / 14 Plus", year: "2022",
+        storage: "128GB / 256GB / 512GB", ram: "6GB RAM",
+        processor: "Apple A15 Bionic (5-core GPU)", camera: "Dual 12MP Main & Ultra-Wide / 12MP Photonic Engine Front",
+        display: "6.1'' / 6.7'' Super Retina XDR OLED", batteryCap: "3279 mAh / 4325 mAh",
+        color: "Midnight, Starlight, Blue, Purple, Yellow, Red", network: "Physical SIM + eSIM",
+        desc: "Crash Detection, Emergency SOS via satellite, Photonic Engine for low-light detail, Action mode video."
+      },
+      IPHONE_14PRO: {
+        category: "iPhones", title: "iPhone 14 Pro / 14 Pro Max", year: "2022",
+        storage: "128GB / 256GB / 512GB / 1TB", ram: "6GB RAM",
+        processor: "Apple A16 Bionic (4nm)", camera: "48MP Main Quad-Pixel + 12MP Ultra-Wide + 12MP Telephoto",
+        display: "6.1'' / 6.7'' Super Retina XDR with Dynamic Island & Always-On", batteryCap: "3200 mAh / 4323 mAh",
+        color: "Deep Purple, Space Black, Gold, Silver", network: "Physical SIM + eSIM",
+        desc: "Dynamic Island interactive notch, Always-On Display, 48MP Pro camera, 2000 nits outdoor brightness."
+      },
+
+      // --- 15, 16, 17 & 18 SERIES ---
+      IPHONE_15: {
+        category: "iPhones", title: "iPhone 15 / 15 Plus", year: "2023",
+        storage: "128GB / 256GB / 512GB", ram: "6GB RAM",
+        processor: "Apple A16 Bionic (4nm)", camera: "48MP Main Lens + 12MP Ultra-Wide / 12MP Front",
+        display: "6.1'' / 6.7'' Super Retina XDR with Dynamic Island", batteryCap: "3349 mAh / 4383 mAh",
+        color: "Black, Blue, Green, Yellow, Pink", network: "Physical SIM + eSIM",
+        desc: "USB-C Connector, Dynamic Island, 48MP Main camera with 2x Telephoto option, color-infused glass back."
+      },
+      IPHONE_15PRO: {
+        category: "iPhones", title: "iPhone 15 Pro / 15 Pro Max", year: "2023",
+        storage: "256GB / 512GB / 1TB", ram: "8GB RAM",
+        processor: "Apple A17 Pro (3nm)", camera: "48MP Main + 12MP Ultra-Wide + 12MP 5x Periscope Telephoto",
+        display: "6.1'' / 6.7'' Super Retina XDR 120Hz ProMotion Titanium", batteryCap: "3274 mAh / 4422 mAh",
+        color: "Natural Titanium, Blue Titanium, White Titanium, Black Titanium", network: "Physical SIM + eSIM",
+        desc: "Aerospace-grade Titanium design, Action button, USB-C 3 speeds (10Gbps), A17 Pro chip for ray tracing."
+      },
+      IPHONE_16: {
+        category: "iPhones", title: "iPhone 16 / 16 Plus", year: "2024",
+        storage: "128GB / 256GB / 512GB", ram: "8GB RAM",
+        processor: "Apple A18 Chip (3nm)", camera: "48MP Fusion Camera + 12MP Ultra-Wide Macro Lens",
+        display: "6.1'' / 6.7'' Super Retina XDR with Dynamic Island", batteryCap: "3561 mAh / 4674 mAh",
+        color: "Black, White, Pink, Teal, Ultramarine", network: "Physical SIM + eSIM",
+        desc: "Camera Control capacitive button, Apple Intelligence ready, Action button, A18 16-core Neural Engine."
+      },
+      IPHONE_16PRO: {
+        category: "iPhones", title: "iPhone 16 Pro / 16 Pro Max", year: "2024",
+        storage: "256GB / 512GB / 1TB", ram: "8GB RAM",
+        processor: "Apple A18 Pro (3nm)", camera: "48MP Fusion + 48MP Ultra-Wide + 12MP 5x Telephoto",
+        display: "6.3'' / 6.9'' Super Retina XDR OLED 120Hz ProMotion", batteryCap: "3582 mAh / 4685 mAh",
+        color: "Desert Titanium, Natural Titanium, White Titanium, Black Titanium", network: "Physical SIM + eSIM",
+        desc: "Largest 6.9'' display with ultra-thin borders, 4K 120fps Dolby Vision video, Studio 4-mic array, Camera Control."
+      },
+      IPHONE_17: {
+        category: "iPhones", title: "iPhone 17 / 17 Air (Slim)", year: "2025",
+        storage: "256GB / 512GB / 1TB", ram: "12GB RAM",
+        processor: "Apple A19 / A19 Pro (3nm)", camera: "48MP Fusion Camera + 18MP Center Stage Front",
+        display: "6.5'' LTPO Super Retina XDR OLED 120Hz (5.6mm Ultra-Thin)", batteryCap: "3149 mAh (MagSafe 20W)",
+        color: "Space Black, Cloud White, Light Gold, Sky Blue", network: "eSIM Only",
+        desc: "Ultra-thin 5.6mm Titanium chassis design, A19 Pro chip, 120Hz ProMotion across all models, 12GB RAM for Apple AI."
+      },
+      IPHONE_17PRO: {
+        category: "iPhones", title: "iPhone 17 Pro / 17 Pro Max", year: "2025",
+        storage: "256GB / 512GB / 1TB / 2TB", ram: "12GB RAM",
+        processor: "Apple A19 Pro (Vapor Chamber Cooling)", camera: "Triple 48MP Fusion (Wide, Ultra-Wide & 8x Telephoto)",
+        display: "6.3'' / 6.9'' Super Retina XDR OLED 120Hz (3000 nits)", batteryCap: "5000 mAh+",
+        color: "Titanium Silver, Dark Titanium, Emerald Titanium", network: "Physical SIM + eSIM / eSIM Only",
+        desc: "Triple 48MP lenses, 8x optical zoom reach, Vapor Chamber cooling system, 3000 nits peak outdoor display."
+      },
+      IPHONE_18PRO: {
+        category: "iPhones", title: "iPhone 18 Pro / 18 Pro Max", year: "2026",
+        storage: "256GB / 512GB / 1TB / 2TB", ram: "12GB RAM",
+        processor: "Apple A20 Pro (2nm Next-Gen Node)", camera: "48MP Variable Aperture (f/1.48-f/4.0) + 48MP Telephoto + 48MP Ultra-Wide",
+        display: "6.3'' / 6.9'' LTPO OLED Ceramic Shield 2 Anti-Reflective", batteryCap: "5567 mAh (45 Hours Playback)",
+        color: "Glacier Silver, Space Black, Deep Burgundy", network: "Dual eSIM / Nano-SIM + eSIM",
+        desc: "First iPhone with Mechanical Variable Aperture lens (f/1.48 to f/4.0), 2nm A20 Pro chip, 60W Fast Charge."
+      },
+
+      // --- SAMSUNG & ANDROID PRESETS ---
+      SAM_S21U: {
+        category: "Samsung", title: "Samsung Galaxy S21 Ultra 5G", year: "2021",
+        storage: "128GB / 256GB / 512GB", ram: "12GB / 16GB RAM",
+        processor: "Exynos 2100 / Snapdragon 888", camera: "108MP Quad Camera + Dual 10MP Telephoto",
+        display: "6.8'' Dynamic AMOLED 2X 120Hz WQHD+", batteryCap: "5000 mAh",
+        color: "Phantom Black, Phantom Silver", network: "Dual Physical SIM",
+        desc: "108MP main camera with 100x Space Zoom, 120Hz refresh rate at WQHD+ resolution, S-Pen compatibility."
+      },
+      SAM_S22U: {
+        category: "Samsung", title: "Samsung Galaxy S22 Ultra 5G", year: "2022",
+        storage: "128GB / 256GB / 512GB / 1TB", ram: "12GB RAM",
+        processor: "Snapdragon 8 Gen 1 (4nm)", camera: "108MP Quad Camera + 10x Optical Periscope + 40MP Front",
+        display: "6.8'' Dynamic AMOLED 2X 120Hz QHD+ (1750 nits)", batteryCap: "5000 mAh",
+        color: "Phantom Black, Phantom White, Burgundy, Green", network: "Dual Physical SIM + eSIM",
+        desc: "Built-in S-Pen stylus, 100x Space Zoom, Nightography video engine, Armor Aluminum frame."
+      },
+      SAM_S23U: {
+        category: "Samsung", title: "Samsung Galaxy S23 Ultra 5G", year: "2023",
+        storage: "256GB / 512GB / 1TB", ram: "12GB RAM",
+        processor: "Snapdragon 8 Gen 2 for Galaxy (4nm)", camera: "200MP Main ISOCELL HP2 + 12MP Ultra-Wide + Dual 10MP Telephoto",
+        display: "6.8'' Dynamic AMOLED 2X 120Hz (1750 nits)", batteryCap: "5000 mAh",
+        color: "Phantom Black, Cream, Green, Lavender", network: "Dual Physical SIM + eSIM",
+        desc: "200MP ISOCELL sensor, S-Pen, Snapdragon 8 Gen 2 for Galaxy overclocked processor, Gorilla Glass Victus 2."
+      },
+      SAM_S24U: {
+        category: "Samsung", title: "Samsung Galaxy S24 Ultra AI", year: "2024",
+        storage: "256GB / 512GB / 1TB", ram: "12GB RAM",
+        processor: "Snapdragon 8 Gen 3 for Galaxy (4nm)", camera: "200MP Main + 50MP 5x Optical Periscope + 10MP 3x + 12MP Ultra-Wide",
+        display: "6.8'' Flat Dynamic AMOLED 2X 120Hz (2600 nits Anti-Reflective)", batteryCap: "5000 mAh",
+        color: "Titanium Gray, Titanium Black, Titanium Violet, Titanium Yellow", network: "Dual Physical SIM + eSIM",
+        desc: "Galaxy AI features (Live Translate, Circle to Search), Titanium frame, Corning Gorilla Armor anti-reflective glass."
+      },
+      PIXEL_7P: {
+        category: "Google Pixel", title: "Google Pixel 7 Pro", year: "2022",
+        storage: "128GB / 256GB / 512GB", ram: "12GB RAM",
+        processor: "Google Tensor G2", camera: "50MP Main + 48MP 5x Telephoto + 12MP Ultra-Wide",
+        display: "6.7'' LTPO OLED 120Hz QHD+", batteryCap: "5000 mAh",
+        color: "Obsidian, Snow, Hazel", network: "Physical SIM + eSIM",
+        desc: "Google Tensor G2 processor, Cinematic Blur, Macro Focus, Photo Unblur in Google Photos."
+      },
+      PIXEL_8P: {
+        category: "Google Pixel", title: "Google Pixel 8 Pro", year: "2023",
+        storage: "128GB / 256GB / 512GB", ram: "12GB RAM",
+        processor: "Google Tensor G3 (4nm)", camera: "50MP Main + 48MP Ultra-Wide + 48MP 5x Telephoto",
+        display: "6.7'' LTPO OLED 120Hz Super Actua (2400 nits)", batteryCap: "5050 mAh",
+        color: "Obsidian, Porcelain, Bay Blue", network: "Physical SIM + eSIM",
+        desc: "Google Tensor G3 chip, Best Take photo editor, Audio Magic Eraser, built-in Temperature Sensor."
+      },
+      PIXEL_9P: {
+        category: "Google Pixel", title: "Google Pixel 9 Pro XL", year: "2024",
+        storage: "128GB / 256GB / 512GB / 1TB", ram: "16GB RAM",
+        processor: "Google Tensor G4 (4nm)", camera: "50MP Main + 48MP 5x Telephoto + 48MP Ultra-Wide",
+        display: "6.8'' Super Actua OLED 120Hz (3000 nits)", batteryCap: "5060 mAh",
+        color: "Obsidian, Porcelain, Hazel, Rose Quartz", network: "Physical SIM + eSIM",
+        desc: "Google Tensor G4 with 16GB RAM for Gemini Nano AI, Satellite SOS, Super Res Zoom Video up to 20x."
+      },
+
+      // --- MACBOOK PRESETS ---
+      MAC_AIR_M1: {
+        category: "MacBooks", title: "MacBook Air M1", year: "2020",
+        storage: "256GB / 512GB / 1TB SSD", ram: "8GB / 16GB Unified RAM",
+        processor: "Apple M1 Chip (8-Core CPU / 7-Core GPU)", camera: "720p FaceTime HD Camera",
+        display: "13.3'' Retina Display with True Tone (2560 x 1600)", batteryCap: "Up to 18 Hours Battery Life",
+        color: "Space Gray, Silver, Gold", network: "Wi-Fi 6 + Bluetooth 5.0",
+        desc: "Fanless silent design, M1 chip delivering breakthrough CPU & GPU performance, Touch ID."
+      },
+      MAC_AIR_M2: {
+        category: "MacBooks", title: "MacBook Air M2", year: "2022",
+        storage: "256GB / 512GB / 1TB / 2TB SSD", ram: "8GB / 16GB / 24GB Unified RAM",
+        processor: "Apple M2 Chip (8-Core CPU / 10-Core GPU)", camera: "1080p FaceTime HD Camera",
+        display: "13.6'' / 15.3'' Liquid Retina Display (500 nits)", batteryCap: "Up to 18 Hours Battery Life",
+        color: "Midnight, Starlight, Space Gray, Silver", network: "Wi-Fi 6 + Bluetooth 5.3",
+        desc: "Redesigned ultra-thin aluminum enclosure, MagSafe 3 charging port, 1080p camera, four-speaker sound system."
+      },
+      MAC_PRO_M3: {
+        category: "MacBooks", title: "MacBook Pro 14'' M3 / M3 Pro", year: "2023",
+        storage: "512GB / 1TB / 2TB SSD", ram: "18GB / 36GB / 48GB Unified RAM",
+        processor: "Apple M3 Pro / M3 Max (3nm)", camera: "1080p FaceTime HD Camera",
+        display: "14.2'' Liquid Retina XDR Mini-LED 120Hz ProMotion (1600 nits)", batteryCap: "Up to 22 Hours Battery Life",
+        color: "Space Black, Silver", network: "Wi-Fi 6E + Bluetooth 5.3",
+        desc: "Liquid Retina XDR display, Dynamic Caching GPU with Hardware Ray Tracing, HDMI port, SDXC card slot, MagSafe 3."
+      }
+    };
+
+    // Initializer
+    document.addEventListener('DOMContentLoaded', () => {
+      updateCartBadge();
+      window.addEventListener('hashchange', handleRoute);
+      handleRoute();
+
+      // Keyboard arrow listener for Lightbox
+      document.addEventListener('keydown', (e) => {
+        const lb = document.getElementById('imageLightboxModal');
+        if (!lb.classList.contains('hidden')) {
+          if (e.key === 'ArrowLeft') prevLightboxImage();
+          if (e.key === 'ArrowRight') nextLightboxImage();
+          if (e.key === 'Escape') closeLightbox();
+        }
+      });
+
+      // Realtime DB - Products Listener (RELIABLE AUTO-LOAD)
+      db.ref("products").on("value", (snap) => {
+        cachedProducts = snap.exists() ? Object.values(snap.val()) : [];
+        renderHomeFeatured();
+        renderShopGrid();
+        renderAdminProductsTable();
+      });
+
+      // Realtime DB - Autos Listener
+      db.ref("automobiles").on("value", (snap) => {
+        cachedAutos = snap.exists() ? Object.values(snap.val()) : [];
+        renderAutosGrid();
+        renderAdminAutosGrid();
+      });
+
+      // Realtime DB - VeeXchange Media Listener
+      db.ref("veexchange_media").on("value", (snap) => {
+        cachedVxMedia = snap.exists() ? Object.values(snap.val()) : [];
+        renderVxMediaGrids();
+        renderAdminVxGrid();
+      });
+
+      // Realtime DB - VeeMedia Videos Listener
+      db.ref("veemedia_videos").on("value", (snap) => {
+        cachedVideos = snap.exists() ? Object.values(snap.val()) : [];
+        renderVideosGrid();
+        renderAdminVideosGrid();
+      });
+
+      // Realtime DB - Admin Auth Listener
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          isAdminLoggedIn = true;
+          db.ref("orders").on("value", (snap) => {
+            cachedOrders = snap.exists() ? Object.values(snap.val()) : [];
+            renderAdminOrdersTable();
+          });
+        } else {
+          isAdminLoggedIn = false;
+        }
+        renderAdminProductsTable();
+      });
+
+      // Secret Admin Trigger: Header Logo Triple Click
+      let logoClickCount = 0;
+      let logoClickTimer = null;
+      document.getElementById('brandHeaderLogo').addEventListener('click', () => {
+        logoClickCount++;
+        clearTimeout(logoClickTimer);
+        if (logoClickCount >= 3) {
+          toggleAdminAuthModal();
+          logoClickCount = 0;
+        } else {
+          logoClickTimer = setTimeout(() => { logoClickCount = 0; }, 800);
+        }
+      });
+    });
+
+    // --- AUTO SPECIFICATION POPULATOR ---
+    function applyDevicePreset(presetKey) {
+      if (!presetKey || !DEVICE_SPECS_DATABASE[presetKey]) return;
+      const spec = DEVICE_SPECS_DATABASE[presetKey];
+
+      document.getElementById('pmCategory').value = spec.category;
+      document.getElementById('pmTitle').value = spec.title;
+      document.getElementById('pmYear').value = spec.year;
+      document.getElementById('pmStorage').value = spec.storage;
+      document.getElementById('pmRam').value = spec.ram;
+      document.getElementById('pmProcessor').value = spec.processor;
+      document.getElementById('pmCameraSpecs').value = spec.camera;
+      document.getElementById('pmDisplaySpecs').value = spec.display;
+      document.getElementById('pmBatteryCap').value = spec.batteryCap;
+      document.getElementById('pmColor').value = spec.color;
+      document.getElementById('pmNetwork').value = spec.network;
+      document.getElementById('pmDescription').value = spec.desc;
+
+      showToast(`Specifications for ${spec.title} auto-populated!`);
+    }
+
+    // --- LIGHTBOX ENLARGEMENT GALLERY ENGINE WITH THUMBNAIL STRIP ---
+    function openLightbox(imagesList, startIndex = 0) {
+      if (!imagesList || imagesList.length === 0) return;
+      lightboxGallery = imagesList;
+      lightboxIndex = startIndex;
+      updateLightboxDisplay();
+      document.getElementById('imageLightboxModal').classList.remove('hidden');
+    }
+
+    function closeLightbox() {
+      document.getElementById('imageLightboxModal').classList.add('hidden');
+    }
+
+    function updateLightboxDisplay() {
+      const item = lightboxGallery[lightboxIndex];
+      const imgEl = document.getElementById('lbMainImage');
+      const counterEl = document.getElementById('lbCounter');
+      const captionEl = document.getElementById('lbCaption');
+      const btnDl = document.getElementById('lbBtnDownload');
+      const thumbStrip = document.getElementById('lbThumbStrip');
+
+      imgEl.src = item.url;
+      counterEl.innerText = `${lightboxIndex + 1} / ${lightboxGallery.length}`;
+      captionEl.innerText = item.caption || `Photo ${lightboxIndex + 1}`;
+
+      btnDl.onclick = () => downloadMedia(item.url, `${(item.caption || 'Photo').replace(/\s+/g,'_')}_${lightboxIndex+1}.jpg`);
+
+      // Render thumbnail selector strip in Lightbox
+      thumbStrip.innerHTML = '';
+      if (lightboxGallery.length > 1) {
+        lightboxGallery.forEach((img, idx) => {
+          const t = document.createElement('img');
+          t.src = img.url;
+          t.className = `w-12 h-12 object-cover rounded-xl cursor-pointer border-2 transition ${idx === lightboxIndex ? 'border-brandOrange scale-110' : 'border-white/20 opacity-60 hover:opacity-100'}`;
+          t.onclick = () => { lightboxIndex = idx; updateLightboxDisplay(); };
+          thumbStrip.appendChild(t);
+        });
+      }
+    }
+
+    function prevLightboxImage() {
+      if (lightboxGallery.length <= 1) return;
+      lightboxIndex = (lightboxIndex - 1 + lightboxGallery.length) % lightboxGallery.length;
+      updateLightboxDisplay();
+    }
+
+    function nextLightboxImage() {
+      if (lightboxGallery.length <= 1) return;
+      lightboxIndex = (lightboxIndex + 1) % lightboxGallery.length;
+      updateLightboxDisplay();
+    }
+
+    // HTML5 Canvas Image Compressor (Max 800px width, JPEG 0.65)
+    function compressImage(file, maxWidth = 800, quality = 0.65) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement('canvas');
+            let width = img.width;
+            let height = img.height;
+            if (width > maxWidth) {
+              height = Math.round((height * maxWidth) / width);
+              width = maxWidth;
+            }
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+            resolve(canvas.toDataURL('image/jpeg', quality));
+          };
+          img.onerror = (err) => reject(err);
+        };
+        reader.onerror = (err) => reject(err);
+      });
+    }
+
+    function readFileAsDataURL(file, maxMb = 8) {
+      return new Promise((resolve, reject) => {
+        if (file.size > maxMb * 1024 * 1024) {
+          return reject(new Error(`File size exceeds ${maxMb}MB. Please paste a video URL link or pick a smaller file.`));
+        }
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (err) => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function uploadMediaToStorage(file, folder, fallbackName = 'upload') {
+      if (!file) return '';
+      if (!storage || !storage.ref) {
+        throw new Error('Firebase Storage is not available. Check the Firebase configuration and storage SDK script.');
+      }
+
+      const safeName = (file.name || fallbackName).replace(/[^a-zA-Z0-9._-]/g, '_');
+      const storageRef = storage.ref(`${folder}/${Date.now()}_${safeName}`);
+      const snapshot = await storageRef.put(file);
+      return snapshot.ref.getDownloadURL();
+    }
+
+    function downloadMedia(url, defaultFilename = 'download') {
+      if (!url) return showToast("No media available to download", true);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = defaultFilename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      showToast("Download started!");
+    }
+
+    function previewSelectedImage(input, previewContainerId) {
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const container = document.getElementById(previewContainerId);
+          const img = container.querySelector('img');
+          img.src = e.target.result;
+          container.classList.remove('hidden');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
+    }
+
+    // STRICT 4-IMAGE PREVIEW ENFORCER
+    function previewSelectedImages(input, previewContainerId) {
+      const container = document.getElementById(previewContainerId);
+      container.innerHTML = '';
+      
+      if (input.files && input.files.length > 0) {
+        if (input.files.length > 4) {
+          alert("Maximum 4 pictures allowed per gadget listing! Please select up to 4 images.");
+          input.value = ""; // Reset
+          container.classList.add('hidden');
+          return;
+        }
+
+        container.classList.remove('hidden');
+        Array.from(input.files).slice(0, 4).forEach((file, idx) => {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = "relative group";
+            div.innerHTML = `
+              <img src="${e.target.result}" class="h-16 w-16 object-cover rounded-lg border border-brandOrange/60 shadow" />
+              <span class="absolute top-0 right-0 bg-brandOrange text-white text-[9px] font-black px-1 rounded-bl">${idx+1}</span>
+            `;
+            container.appendChild(div);
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+    }
+
+    // SPA Router
+    function handleRoute() {
+      const hash = window.location.hash || '#home';
+      const views = ['home', 'shop', 'find-device', 'automobiles', 'veexchange', 'media', 'checkout', 'admin'];
+      
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const activeView = hash.replace('#', '');
+      const targetEl = document.getElementById(`view-${activeView}`);
+      if (targetEl) targetEl.classList.remove('hidden');
+      else document.getElementById('view-home').classList.remove('hidden');
+      
+      if (activeView === 'admin') renderAdminProductsTable();
+      window.scrollTo(0, 0);
+    }
+
+    function toggleMobileNav() {
+      document.getElementById('mobileNavMenu').classList.toggle('hidden');
+    }
+
+    function showToast(msg, isError = false) {
+      const toast = document.getElementById('toastNotification');
+      document.getElementById('toastMessage').innerText = msg;
+      document.getElementById('toastIcon').className = isError ? "fa-solid fa-triangle-exclamation text-red-500 text-xl" : "fa-solid fa-circle-check text-brandOrange text-xl";
+      
+      toast.classList.remove('translate-y-[-150%]', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-[-150%]', 'opacity-0');
+      }, 3000);
+    }
+
+    function getFormElement(id) {
+      const el = document.getElementById(id);
+      if (!el) {
+        throw new Error(`Missing required form field: ${id}`);
+      }
+      return el;
+    }
+
+    function getErrorDetails(err) {
+      if (!err) return 'Unknown error';
+      if (typeof err === 'string') return err;
+      if (typeof err === 'object') {
+        const parts = [];
+        if (err.name) parts.push(err.name);
+        if (err.code) parts.push(`code: ${err.code}`);
+        if (err.message) parts.push(err.message);
+        if (err.status) parts.push(`status: ${err.status}`);
+        if (err.response) {
+          if (err.response.status) parts.push(`HTTP ${err.response.status}`);
+          if (err.response.data) {
+            const responseText = typeof err.response.data === 'string' ? err.response.data : JSON.stringify(err.response.data);
+            parts.push(`response: ${responseText}`);
+          }
+        }
+        if (parts.length) return parts.join(' | ');
+        try {
+          return JSON.stringify(err);
+        } catch (jsonErr) {
+          return String(err);
+        }
+      }
+      return String(err);
+    }
+
+    function reportSaveFailure(label, err) {
+      const details = getErrorDetails(err);
+      console.error(label, err);
+      showToast(`${label}: ${details}`, true);
+      alert(`${label}: ${details}`);
+    }
+
+    // --- PRODUCTS ENGINE WITH 4-IMAGE CAROUSEL & THUMBNAILS ---
+    function renderHomeFeatured() {
+      const grid = document.getElementById('homeFeaturedGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      cachedProducts.slice(0, 4).forEach(p => grid.appendChild(createProductCard(p)));
+    }
+
+    function renderShopGrid() {
+      const grid = document.getElementById('shopProductGrid');
+      if (!grid) return;
+      grid.innerHTML = '';
+      cachedProducts.forEach(p => grid.appendChild(createProductCard(p)));
+    }
+
+    function createProductCard(p) {
+      const card = document.createElement('div');
+      card.className = "liquid-glass rounded-3xl overflow-hidden flex flex-col justify-between group cursor-pointer relative";
+      const formattedPrice = `₦${Number(p.price).toLocaleString()}`;
+      
+      // Ensure max 4 photos
+      const imgList = (p.images && p.images.length > 0) ? p.images.slice(0, 4) : [p.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80'];
+      const stockQty = Number(p.stock !== undefined ? p.stock : 1);
+      const isSoldOut = (p.status === 'Sold Out') || (stockQty <= 0);
+
+      card.onclick = (e) => {
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button')) return;
+        openDeviceDetailsModal(p.id);
+      };
+
+      const galleryItems = imgList.map((url, idx) => ({ url, caption: `${p.title} (Angle ${idx+1})` }));
+
+      let activeImageIndex = 0;
+
+      card.innerHTML = `
+        <div class="relative overflow-hidden">
+          <img id="cardMainImg_${p.id}" src="${imgList[0]}" class="h-52 w-full object-cover transform transition duration-500 group-hover:scale-105 ${isSoldOut ? 'grayscale filter blur-[1px]' : ''}" />
+          
+          ${isSoldOut ? `<div class="absolute inset-0 bg-black/65 backdrop-blur-xs flex items-center justify-center z-10"><span class="font-black text-red-500 text-sm tracking-widest uppercase border-2 border-red-500/60 px-4 py-1.5 rounded-2xl rotate-[-12deg] shadow-2xl bg-black/80">SOLD OUT</span></div>` : ''}
+
+          <span class="absolute top-3 left-3 bg-brandOrange/90 backdrop-blur-md text-white font-extrabold text-[9px] px-2.5 py-1 rounded-full uppercase tracking-wider shadow-lg z-20">${p.condition || 'UK Used'}</span>
+          
+          ${p.video ? `<span class="absolute bottom-3 left-3 bg-black/80 backdrop-blur-md text-brandOrange text-[10px] font-bold px-2 py-0.5 rounded-full border border-brandOrange/40 z-20"><i class="fa-solid fa-video mr-1"></i>Video Review</span>` : ''}
+          
+          <button onclick="event.stopPropagation(); openLightbox(${JSON.stringify(galleryItems).replace(/"/g, '"')}, 0)" class="absolute top-3 right-3 bg-black/70 hover:bg-brandOrange text-white text-[10px] font-bold px-2.5 py-1 rounded-full border border-white/20 shadow z-20"><i class="fa-solid fa-images"></i> ${imgList.length} Photos</button>
+
+          <!-- 4-Image Mini Selector Dots -->
+          ${imgList.length > 1 ? `
+            <div class="absolute bottom-2 right-2 flex space-x-1 z-20 bg-black/60 px-2 py-1 rounded-full border border-white/10" onclick="event.stopPropagation()">
+              ${imgList.map((_, idx) => `
+                <button onclick="switchCardPhoto('${p.id}', ${idx})" id="cardDot_${p.id}_${idx}" class="w-2 h-2 rounded-full transition ${idx===0 ? 'bg-brandOrange scale-125' : 'bg-white/50 hover:bg-white'}"></button>
+              `).join('')}
+            </div>
+          ` : ''}
+        </div>
+
+        <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+          <div>
+            <div class="flex justify-between items-center mb-0.5">
+              <span class="text-[10px] text-brandOrange font-bold uppercase tracking-wider">${p.category}</span>
+              ${isSoldOut 
+                ? `<span class="text-[9px] font-black text-red-400 bg-red-500/10 border border-red-500/30 px-2 py-0.5 rounded-full uppercase">Sold Out</span>`
+                : `<span class="text-[9px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.5 rounded-full uppercase">${stockQty} in stock</span>`
+              }
+            </div>
+            <h4 class="font-bold text-white text-sm line-clamp-1 group-hover:text-brandOrange transition">${p.title}</h4>
+            <p class="text-[11px] text-slate-400 mt-0.5">${p.storage || ''} ${p.color ? '• ' + p.color : ''} • Bat: ${p.batteryHealth || '100'}%</p>
+            
+            ${p.description ? `<p class="text-[11px] text-slate-300 mt-2 bg-white/5 p-2 rounded-xl border border-white/5 leading-snug line-clamp-2">${p.description}</p>` : ''}
+          </div>
+
+          <div class="pt-2 border-t border-white/10 flex items-center justify-between">
+            <span class="font-mono font-black text-brandOrange text-base">${formattedPrice}</span>
+            ${isSoldOut 
+              ? `<button disabled class="bg-red-950/60 text-red-400 border border-red-800/40 px-3 py-1.5 rounded-xl text-xs font-bold cursor-not-allowed">Out of Stock</button>`
+              : `<button onclick="addToCart('${p.id}')" class="bg-white/10 hover:bg-brandOrange text-white px-3 py-1.5 rounded-xl text-xs font-bold transition shadow">+ Cart</button>`
+            }
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    function switchCardPhoto(productId, index) {
+      const p = cachedProducts.find(item => item.id === productId);
+      if (!p) return;
+      const imgList = (p.images && p.images.length > 0) ? p.images.slice(0, 4) : [p.image];
+      const imgEl = document.getElementById(`cardMainImg_${productId}`);
+      if (imgEl && imgList[index]) {
+        imgEl.src = imgList[index];
+        imgList.forEach((_, idx) => {
+          const dot = document.getElementById(`cardDot_${productId}_${idx}`);
+          if (dot) {
+            if (idx === index) dot.className = "w-2 h-2 rounded-full transition bg-brandOrange scale-125";
+            else dot.className = "w-2 h-2 rounded-full transition bg-white/50 hover:bg-white";
+          }
+        });
+      }
+    }
+
+    function openDeviceDetailsModal(id) {
+      const p = cachedProducts.find(item => item.id === id);
+      if (!p) return;
+
+      const stockQty = Number(p.stock !== undefined ? p.stock : 1);
+      const isSoldOut = (p.status === 'Sold Out') || (stockQty <= 0);
+      const imgList = (p.images && p.images.length > 0) ? p.images.slice(0, 4) : [p.image];
+      const galleryItems = imgList.map((url, idx) => ({ url, caption: `${p.title} (Photo ${idx+1})` }));
+
+      document.getElementById('ddModalTitle').innerText = p.title;
+      document.getElementById('ddModalImg').src = imgList[0];
+      document.getElementById('ddModalCondition').innerText = p.condition || 'UK Used';
+      document.getElementById('ddModalPrice').innerText = `₦${Number(p.price).toLocaleString()}`;
+      document.getElementById('ddModalStorage').innerText = `${p.storage || 'N/A'} ${p.ram ? '• ' + p.ram : ''}`;
+      document.getElementById('ddModalStockQty').innerText = isSoldOut ? '0 Units (Sold Out)' : `${stockQty} Units Available`;
+      document.getElementById('ddModalDescription').innerText = p.description || 'No custom inspection notes provided.';
+
+      // Render 4-Photo Thumbnails Strip inside Details Modal
+      const thumbContainer = document.getElementById('ddModalThumbnails');
+      thumbContainer.innerHTML = '';
+      imgList.forEach((url, idx) => {
+        const thumb = document.createElement('img');
+        thumb.src = url;
+        thumb.className = `w-14 h-14 object-cover rounded-xl cursor-pointer border-2 transition ${idx===0 ? 'border-brandOrange scale-105' : 'border-white/10 opacity-70 hover:opacity-100'}`;
+        thumb.onclick = () => {
+          document.getElementById('ddModalImg').src = url;
+          Array.from(thumbContainer.children).forEach((child, i) => {
+            child.className = `w-14 h-14 object-cover rounded-xl cursor-pointer border-2 transition ${i===idx ? 'border-brandOrange scale-105' : 'border-white/10 opacity-70 hover:opacity-100'}`;
+          });
+        };
+        thumbContainer.appendChild(thumb);
+      });
+
+      // Status Badge
+      const statusBadge = document.getElementById('ddModalStatusBadge');
+      if (isSoldOut) {
+        statusBadge.innerText = 'SOLD OUT';
+        statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase bg-red-600/20 text-red-400 border border-red-500/40';
+      } else {
+        statusBadge.innerText = `IN STOCK (${stockQty})`;
+        statusBadge.className = 'text-[10px] font-extrabold px-2.5 py-0.5 rounded-full uppercase bg-emerald-600/20 text-emerald-400 border border-emerald-500/40';
+      }
+      statusBadge.classList.remove('hidden');
+
+      // Lightbox Triggers
+      document.getElementById('ddImgWrapper').onclick = () => openLightbox(galleryItems, 0);
+      document.getElementById('ddBtnEnlargeImg').onclick = () => openLightbox(galleryItems, 0);
+      document.getElementById('ddBtnDownloadImg').onclick = () => downloadMedia(imgList[0], `${p.title.replace(/\s+/g,'_')}_Photo.jpg`);
+
+      // Video Preview & Download
+      const vidContainer = document.getElementById('ddModalVideoContainer');
+      const btnVidDownload = document.getElementById('ddBtnDownloadVid');
+      vidContainer.innerHTML = '';
+
+      if (p.video) {
+        btnVidDownload.classList.remove('hidden');
+        btnVidDownload.onclick = () => downloadMedia(p.video, `${p.title.replace(/\s+/g,'_')}_Video.mp4`);
+
+        if (p.video.includes('youtube.com') || p.video.includes('vimeo.com') || p.video.includes('tiktok.com')) {
+          const iframe = document.createElement('iframe');
+          iframe.src = p.video;
+          iframe.className = "w-full h-full";
+          iframe.setAttribute('frameborder', '0');
+          iframe.setAttribute('allowfullscreen', 'true');
+          vidContainer.appendChild(iframe);
+        } else {
+          const video = document.createElement('video');
+          video.src = p.video;
+          video.controls = true;
+          video.className = "w-full h-full rounded-2xl";
+          vidContainer.appendChild(video);
+        }
+      } else {
+        btnVidDownload.classList.add('hidden');
+        vidContainer.innerHTML = `<span class="text-slate-500 text-xs">No video preview attached.</span>`;
+      }
+
+      // Unit Diagnostics & Detailed Specs
+      const badgesContainer = document.getElementById('ddModalBadges');
+      badgesContainer.innerHTML = `
+        <div class="flex items-center space-x-1.5 ${p.faceIdWorking !== false ? 'text-emerald-400' : 'text-red-400'}"><i class="fa-solid fa-${p.faceIdWorking !== false ? 'circle-check' : 'circle-xmark'}"></i><span>Face/Touch ID: ${p.faceIdWorking !== false ? 'Working' : 'Issue'}</span></div>
+        <div class="flex items-center space-x-1.5 ${p.trueToneWorking !== false ? 'text-emerald-400' : 'text-red-400'}"><i class="fa-solid fa-${p.trueToneWorking !== false ? 'circle-check' : 'circle-xmark'}"></i><span>True Tone: ${p.trueToneWorking !== false ? 'Working' : 'Issue'}</span></div>
+        <div class="flex items-center space-x-1.5 text-slate-300"><i class="fa-solid fa-battery-three-quarters text-amber-400"></i><span>Battery: ${p.batteryHealth || 100}% (${p.batteryState || 'Original'})</span></div>
+        <div class="flex items-center space-x-1.5 text-slate-300"><i class="fa-solid fa-mobile text-blue-400"></i><span>Screen: ${p.screenState || 'Original'}</span></div>
+        <div class="flex items-center space-x-1.5 text-slate-300"><i class="fa-solid fa-sim-card text-purple-400"></i><span>SIM: ${p.network || 'Physical + eSIM'}</span></div>
+        <div class="flex items-center space-x-1.5 text-slate-300"><i class="fa-solid fa-star text-amber-400"></i><span>Grade: ${p.cosmeticGrade || '9.5/10'}</span></div>
+        <div class="flex items-center space-x-1.5 text-slate-300"><i class="fa-solid fa-microchip text-slate-400"></i><span>Chip: ${p.processor || 'Apple Chip'}</span></div>
+        <div class="flex items-center space-x-1.5 text-slate-300"><i class="fa-solid fa-palette text-pink-400"></i><span>Color: ${p.color || 'Standard'}</span></div>
+      `;
+
+      const addBtn = document.getElementById('ddBtnAddToCart');
+      if (isSoldOut) {
+        addBtn.disabled = true;
+        addBtn.innerText = "OUT OF STOCK";
+        addBtn.className = "flex-1 bg-red-950/80 text-red-400 font-black py-3 rounded-xl border border-red-800/40 cursor-not-allowed";
+      } else {
+        addBtn.disabled = false;
+        addBtn.innerText = "+ Add to Cart";
+        addBtn.className = "flex-1 gradient-orange hover:bg-brandOrangeHover text-white font-black py-3 rounded-xl shadow-lg transition";
+        addBtn.onclick = () => { addToCart(p.id); closeModal('deviceDetailsModal'); };
+      }
+
+      document.getElementById('ddBtnWhatsApp').href = `https://wa.me/2348141109213?text=Inquiry%20for%20${encodeURIComponent(p.title + ' (' + p.condition + ')')}`;
+      document.getElementById('deviceDetailsModal').classList.remove('hidden');
+    }
+
+    function filterShopProducts() {
+      const search = document.getElementById('shopSearchInput').value.toLowerCase();
+      const cat = document.getElementById('shopCategoryFilter').value;
+      const grid = document.getElementById('shopProductGrid');
+      grid.innerHTML = '';
+
+      cachedProducts.filter(p => {
+        const mCat = cat === 'ALL' || p.category === cat;
+        const mSearch = p.title.toLowerCase().includes(search) || (p.storage && p.storage.toLowerCase().includes(search));
+        return mCat && mSearch;
+      }).forEach(p => grid.appendChild(createProductCard(p)));
+    }
+
+    // --- CART ENGINE ---
+    function addToCart(id) {
+      const p = cachedProducts.find(item => item.id === id);
+      if (!p) return;
+      const stockQty = Number(p.stock !== undefined ? p.stock : 1);
+      if (p.status === 'Sold Out' || stockQty <= 0) return showToast("This item is sold out!", true);
+      
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        if (existing.qty + 1 > stockQty) return showToast(`Only ${stockQty} unit(s) available in stock!`, true);
+        existing.qty += 1;
+      } else {
+        cart.push({ id: p.id, title: p.title, price: Number(p.price), image: (p.images && p.images[0]) || p.image, qty: 1 });
+      }
+      saveCart();
+      showToast(`${p.title} added to cart!`);
+    }
+
+    function saveCart() {
+      localStorage.setItem('vgat_cart', JSON.stringify(cart));
+      updateCartBadge();
+    }
+
+    function updateCartBadge() {
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      document.getElementById('cartBadgeCount').innerText = count;
+    }
+
+    function toggleCartDrawer() {
+      const drawer = document.getElementById('cartDrawer');
+      drawer.classList.toggle('hidden');
+      if (!drawer.classList.contains('hidden')) renderCartItems();
+    }
+
+    function renderCartItems() {
+      const container = document.getElementById('cartDrawerItems');
+      container.innerHTML = '';
+      let subtotal = 0;
+      cart.forEach(item => {
+        subtotal += item.price * item.qty;
+        const div = document.createElement('div');
+        div.className = "flex items-center justify-between bg-white/5 p-2.5 rounded-xl border border-white/10";
+        div.innerHTML = `
+          <div>
+            <div class="font-bold text-white text-xs">${item.title}</div>
+            <div class="font-mono text-brandOrange text-[11px]">₦${item.price.toLocaleString()} x ${item.qty}</div>
+          </div>
+          <div class="flex items-center space-x-1">
+            <button onclick="updateCartQty('${item.id}', -1)" class="px-2 py-0.5 bg-white/10 text-white rounded">-</button>
+            <span class="px-2 text-white font-mono">${item.qty}</span>
+            <button onclick="updateCartQty('${item.id}', 1)" class="px-2 py-0.5 bg-white/10 text-white rounded">+</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      document.getElementById('cartDrawerSubtotal').innerText = `₦${subtotal.toLocaleString()}`;
+    }
+
+    function updateCartQty(id, delta) {
+      const item = cart.find(i => i.id === id);
+      if (item) {
+        item.qty += delta;
+        if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+        saveCart();
+        renderCartItems();
+      }
+    }
+
+    function proceedToCheckout() {
+      if (cart.length === 0) return showToast("Cart is empty!", true);
+      toggleCartDrawer();
+      window.location.hash = '#checkout';
+      renderCheckoutSummary();
+    }
+
+    function renderCheckoutSummary() {
+      const container = document.getElementById('checkoutCartItems');
+      container.innerHTML = '';
+      let subtotal = 0;
+      cart.forEach(item => {
+        subtotal += item.price * item.qty;
+        const div = document.createElement('div');
+        div.className = "flex justify-between text-slate-300";
+        div.innerHTML = `<span>${item.title} (x${item.qty})</span><span class="font-mono text-white">₦${(item.price * item.qty).toLocaleString()}</span>`;
+        container.appendChild(div);
+      });
+      document.getElementById('coSubtotal').innerText = `₦${subtotal.toLocaleString()}`;
+      document.getElementById('coShipping').innerText = `₦5,000`;
+      document.getElementById('coTotal').innerText = `₦${(subtotal + 5000).toLocaleString()}`;
+    }
+
+    async function handlePlaceOrder(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnPlaceOrder');
+      btn.innerText = "Processing..."; btn.disabled = true;
+
+      const subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
+      const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,"");
+      const orderRef = `VGT-${dateStr}-${Math.floor(1000 + Math.random() * 9000)}`;
+
+      const orderData = {
+        orderRef,
+        customerName: document.getElementById('coName').value,
+        customerPhone: document.getElementById('coPhone').value,
+        customerEmail: document.getElementById('coEmail').value,
+        state: document.getElementById('coState').value,
+        city: document.getElementById('coCity').value,
+        deliveryAddress: document.getElementById('coAddress').value,
+        items: cart,
+        totalAmount: subtotal + 5000,
+        paymentStatus: "Pending Verification",
+        orderStatus: "Order Received",
+        createdAt: new Date().toISOString()
+      };
+
+      try {
+        await db.ref("orders/" + orderRef).set(orderData);
+
+        for (const cartItem of cart) {
+          const product = cachedProducts.find(p => p.id === cartItem.id);
+          if (product) {
+            const currentStock = Number(product.stock !== undefined ? product.stock : 1);
+            const newStock = Math.max(0, currentStock - cartItem.qty);
+            const newStatus = newStock === 0 ? 'Sold Out' : (product.status || 'In Stock');
+            await db.ref(`products/${product.id}`).update({ stock: newStock, status: newStatus });
+          }
+        }
+
+        cart = []; saveCart();
+        btn.innerText = "Submit Order & Bank Transfer"; btn.disabled = false;
+        showToast(`Order ${orderRef} submitted!`);
+        alert(`Order Received!\n\nOrder Ref: ${orderRef}\n\nPlease transfer total to Wema Bank (0289654120 - VEE GADGET AUTOS TECH) and keep your receipt.`);
+        window.location.hash = '#home';
+      } catch (err) {
+        alert("Order Error: " + err.message);
+        btn.innerText = "Submit Order & Bank Transfer"; btn.disabled = false;
+      }
+    }
+
+    function checkoutViaWhatsApp() {
+      if (cart.length === 0) return showToast("Cart is empty!", true);
+      const name = document.getElementById('coName').value || "Customer";
+      const total = document.getElementById('coTotal').innerText;
+      let itemsList = cart.map(i => `- ${i.title} (x${i.qty})`).join('%0A');
+      const msg = `Hello Vee Gadget Autos Tech,%0AI would like to place an order:%0A%0A${itemsList}%0A%0ATotal Amount: ${total}%0ACustomer Name: ${name}`;
+      window.open(`https://wa.me/2348141109213?text=${msg}`, '_blank');
+    }
+
+    // --- VEE FIND MY DEVICE ENGINE ---
+    function setQuizAnswer(key, val, step) {
+      quizAnswers[key] = val;
+      document.getElementById(`quizStep${step}`).classList.add('hidden');
+      if (step < 4) {
+        document.getElementById(`quizStep${step+1}`).classList.remove('hidden');
+        document.getElementById('quizStepIndicator').innerText = `Step ${step+1} of 4`;
+      } else {
+        runRecommendationEngine();
+      }
+    }
+
+    function runRecommendationEngine() {
+      const container = document.getElementById('quizResultsContainer');
+      const grid = document.getElementById('quizResultsGrid');
+      container.classList.remove('hidden'); grid.innerHTML = '';
+
+      let results = cachedProducts
+        .filter(p => p.status !== 'Sold Out' && (p.stock === undefined || p.stock > 0))
+        .map(p => {
+          let score = 0;
+          const price = Number(p.price);
+          if (quizAnswers.budget === 'LOW' && price <= 350000) score += 25;
+          else if (quizAnswers.budget === 'MID' && price > 350000 && price <= 700000) score += 25;
+          else if (quizAnswers.budget === 'HIGH' && price > 700000 && price <= 1300000) score += 25;
+          else score += 15;
+
+          if (quizAnswers.brand === 'APPLE' && (p.category === 'iPhones' || p.category === 'MacBooks')) score += 35;
+          else if (quizAnswers.brand === 'ANDROID' && (p.category === 'Samsung' || p.category === 'Google Pixel')) score += 35;
+          else score += 20;
+
+          if (quizAnswers.condition === 'NEW' && p.condition && p.condition.includes('New')) score += 20;
+          else score += 15;
+
+          return { ...p, matchScore: score };
+        }).sort((a,b) => b.matchScore - a.matchScore);
+
+      results.slice(0, 4).forEach(item => {
+        const div = document.createElement('div');
+        div.className = "liquid-glass p-4 rounded-2xl border border-white/10 flex flex-col justify-between space-y-2";
+        div.innerHTML = `
+          <div>
+            <div class="flex justify-between items-center">
+              <span class="bg-emerald-500/20 text-emerald-400 font-bold text-[10px] px-2 py-0.5 rounded-full">${item.matchScore}% Match</span>
+              <span class="text-brandOrange font-mono font-black text-xs">₦${Number(item.price).toLocaleString()}</span>
+            </div>
+            <h4 class="font-bold text-white text-sm mt-2">${item.title}</h4>
+            <p class="text-[11px] text-slate-400 mt-0.5">${item.storage || ''} • Battery: ${item.batteryHealth || 100}%</p>
+          </div>
+          <button onclick="addToCart('${item.id}')" class="w-full gradient-orange text-white font-bold py-1.5 rounded-xl text-xs">+ Add to Cart</button>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function resetQuiz() {
+      quizAnswers = {};
+      document.getElementById('quizResultsContainer').classList.add('hidden');
+      for(let i=1; i<=4; i++) document.getElementById(`quizStep${i}`).classList.add('hidden');
+      document.getElementById('quizStep1').classList.remove('hidden');
+      document.getElementById('quizStepIndicator').innerText = "Step 1 of 4";
+    }
+
+    // --- AUTOMOBILE MARKETPLACE ENGINE ---
+    function renderAutosGrid() {
+      const grid = document.getElementById('autosGrid');
+      if (!grid) return; grid.innerHTML = '';
+      cachedAutos.forEach(car => {
+        const div = document.createElement('div');
+        div.className = "liquid-glass rounded-3xl overflow-hidden border border-white/10 space-y-3 p-4 flex flex-col justify-between relative";
+        const img = car.image || 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=500&q=80';
+        const isSold = car.status === 'Sold';
+
+        div.innerHTML = `
+          <div class="space-y-3">
+            <div class="relative cursor-pointer group" onclick="openLightbox([{url:'${img}', caption:'${car.make} ${car.model}'}], 0)">
+              <img src="${img}" class="h-48 w-full object-cover rounded-2xl ${isSold ? 'grayscale filter blur-[1px]' : ''}" />
+              
+              ${isSold ? `<div class="absolute inset-0 bg-black/65 backdrop-blur-xs flex items-center justify-center z-10"><span class="font-black text-red-500 text-sm tracking-widest uppercase border-2 border-red-500/60 px-4 py-1.5 rounded-2xl rotate-[-12deg] shadow-2xl bg-black/80">SOLD</span></div>` : ''}
+
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-2xl flex items-center justify-center text-white font-bold text-xs space-x-1.5 z-20">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                <span>Enlarge Vehicle Photo</span>
+              </div>
+              <div class="absolute bottom-2 left-2 flex gap-1 z-20" onclick="event.stopPropagation()">
+                <button onclick="downloadMedia('${img}', '${car.make}_${car.model}.jpg')" class="bg-black/70 hover:bg-brandOrange text-white text-[10px] font-bold px-2 py-1 rounded-lg border border-white/20"><i class="fa-solid fa-download mr-1"></i>Photo</button>
+                ${car.video ? `<button onclick="downloadMedia('${car.video}', '${car.make}_${car.model}.mp4')" class="bg-black/70 hover:bg-brandOrange text-white text-[10px] font-bold px-2 py-1 rounded-lg border border-white/20"><i class="fa-solid fa-download mr-1"></i>Video</button>` : ''}
+              </div>
+            </div>
+            <div>
+              <div class="flex items-center justify-between">
+                <span class="bg-emerald-500/20 text-emerald-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase">${car.year} • ${car.condition}</span>
+                ${isSold ? `<span class="bg-red-500/20 text-red-400 text-[10px] font-bold px-2 py-0.5 rounded uppercase border border-red-500/30">Delivered</span>` : ''}
+              </div>
+              <h4 class="font-black text-white text-base mt-1">${car.make} ${car.model}</h4>
+              <p class="text-xs text-slate-400">${car.trim || ''} • Mileage: ${car.mileage || 'Clean'}</p>
+            </div>
+          </div>
+          <div class="pt-3 mt-2 border-t border-white/10 flex items-center justify-between">
+            <span class="font-mono font-black text-brandOrange text-base">₦${Number(car.price).toLocaleString()}</span>
+            ${isSold 
+              ? `<span class="bg-red-950/60 text-red-400 px-3.5 py-1.5 rounded-xl text-xs font-bold border border-red-800/40">Vehicle Sold</span>`
+              : `<a href="https://wa.me/2348141109213?text=Inquiry%20for%20${encodeURIComponent(car.make + ' ' + car.model)}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow">Inquire</a>`
+            }
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    // --- VEEXCHANGE SHOWCASE ---
+    function renderVxMediaGrids() {
+      const flyersGrid = document.getElementById('vxFlyersGrid');
+      const proofsGrid = document.getElementById('vxProofsGrid');
+      if (!flyersGrid || !proofsGrid) return;
+
+      flyersGrid.innerHTML = '';
+      proofsGrid.innerHTML = '';
+
+      const flyers = cachedVxMedia.filter(m => m.category === 'FLYER');
+      const proofs = cachedVxMedia.filter(m => m.category === 'PROOF');
+
+      if (flyers.length === 0) {
+        flyersGrid.innerHTML = `<div class="col-span-full p-4 liquid-glass rounded-xl text-center text-slate-400 text-xs">No active rate flyers posted today. Contact on WhatsApp for live rates!</div>`;
+      } else {
+        const flyerGallery = flyers.map(f => ({ url: f.image, caption: f.title }));
+        flyers.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = "liquid-glass p-3 rounded-2xl border border-white/10 space-y-2 flex flex-col justify-between";
+          div.innerHTML = `
+            <div class="relative cursor-pointer group" onclick="openLightbox(flyerGallery, ${index})">
+              <img src="${item.image}" class="w-full h-64 object-cover rounded-xl border border-white/5" />
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center text-white font-bold text-xs space-x-1.5">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                <span>Enlarge Flyer</span>
+              </div>
+              <div class="absolute top-2 right-2 flex gap-1 z-10" onclick="event.stopPropagation()">
+                <button onclick="downloadMedia('${item.image}', '${item.title.replace(/\s+/g,'_')}.jpg')" class="bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded-lg border border-white/20 hover:bg-brandOrange"><i class="fa-solid fa-download"></i> Photo</button>
+                ${item.video ? `<button onclick="downloadMedia('${item.video}', '${item.title.replace(/\s+/g,'_')}.mp4')" class="bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded-lg border border-white/20 hover:bg-brandOrange"><i class="fa-solid fa-download"></i> Video</button>` : ''}
+              </div>
+            </div>
+            <div class="text-white font-bold text-xs truncate mt-1">${item.title}</div>
+            <a href="https://wa.me/2348141109213?text=Trade%20Inquiry:%20${encodeURIComponent(item.title)}" target="_blank" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-[11px] text-center block">Trade at this Rate →</a>
+          `;
+          flyersGrid.appendChild(div);
+        });
+      }
+
+      if (proofs.length === 0) {
+        proofsGrid.innerHTML = `<div class="col-span-full p-4 liquid-glass rounded-xl text-center text-slate-400 text-xs">No payout proof screenshots uploaded yet.</div>`;
+      } else {
+        const proofGallery = proofs.map(p => ({ url: p.image, caption: p.title }));
+        proofs.forEach((item, index) => {
+          const div = document.createElement('div');
+          div.className = "liquid-glass p-3 rounded-2xl border border-white/10 space-y-2 cursor-pointer group";
+          div.onclick = () => openLightbox(proofGallery, index);
+          div.innerHTML = `
+            <div class="relative">
+              <img src="${item.image}" class="w-full h-64 object-cover rounded-xl border border-white/5" />
+              <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition rounded-xl flex items-center justify-center text-white font-bold text-xs space-x-1.5">
+                <i class="fa-solid fa-magnifying-glass-plus"></i>
+                <span>Enlarge Proof</span>
+              </div>
+              <button onclick="event.stopPropagation(); downloadMedia('${item.image}', 'Payout_Proof.jpg')" class="absolute top-2 right-2 bg-black/80 text-white text-[10px] font-bold px-2 py-1 rounded-lg border border-white/20 hover:bg-brandOrange z-10"><i class="fa-solid fa-download"></i> Save</button>
+            </div>
+            <div class="text-slate-300 font-semibold text-[11px] truncate">${item.title}</div>
+          `;
+          proofsGrid.appendChild(div);
+        });
+      }
+    }
+
+    // --- VEEMEDIA VIDEO ENGINE ---
+    function renderVideosGrid() {
+      const grid = document.getElementById('mediaGrid');
+      if (!grid) return; grid.innerHTML = '';
+
+      if (cachedVideos.length === 0) {
+        grid.innerHTML = `<div class="col-span-full p-6 liquid-glass rounded-2xl text-center text-slate-400 text-xs">No media videos published yet. Check back soon!</div>`;
+        return;
+      }
+
+      cachedVideos.forEach(v => {
+        const div = document.createElement('div');
+        div.className = "liquid-glass rounded-3xl overflow-hidden border border-white/10 flex flex-col justify-between hover:border-brandOrange/40 transition cursor-pointer";
+        div.onclick = () => playVideoModal(v.title, v.videoUrl);
+        
+        div.innerHTML = `
+          <div class="relative">
+            <img src="${v.thumbUrl}" class="h-44 w-full object-cover" />
+            <div class="absolute inset-0 bg-black/40 flex items-center justify-center">
+              <div class="w-12 h-12 bg-brandOrange text-white rounded-full flex items-center justify-center shadow-lg transform transition hover:scale-110">
+                <i class="fa-solid fa-play text-lg ml-1"></i>
+              </div>
+            </div>
+            <span class="absolute top-2.5 left-2.5 bg-black/70 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-full uppercase border border-white/20">${v.category}</span>
+          </div>
+          <div class="p-4 flex-1 flex justify-between items-center">
+            <div>
+              <h4 class="font-bold text-white text-sm line-clamp-2">${v.title}</h4>
+              <p class="text-[10px] text-brandOrange font-bold mt-1 flex items-center space-x-1"><span>Watch Video</span><i class="fa-solid fa-arrow-right"></i></p>
+            </div>
+            ${v.videoUrl ? `<button onclick="event.stopPropagation(); downloadMedia('${v.videoUrl}', '${v.title.replace(/\s+/g,'_')}.mp4')" class="p-2.5 bg-white/10 hover:bg-brandOrange text-white rounded-xl text-xs"><i class="fa-solid fa-download"></i></button>` : ''}
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function playVideoModal(title, url) {
+      document.getElementById('playerTitle').innerText = title;
+      const container = document.getElementById('playerVideoContainer');
+      container.innerHTML = '';
+
+      if (url && (url.includes('youtube.com') || url.includes('youtu.be') || url.includes('vimeo.com') || url.includes('tiktok.com'))) {
+        const iframe = document.createElement('iframe');
+        iframe.src = url;
+        iframe.className = "w-full h-full";
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allowfullscreen', 'true');
+        container.appendChild(iframe);
+      } else if (url) {
+        const video = document.createElement('video');
+        video.src = url;
+        video.controls = true;
+        video.autoplay = true;
+        video.className = "w-full h-full rounded-2xl";
+        container.appendChild(video);
+      }
+      document.getElementById('playerModal').classList.remove('hidden');
+    }
+
+    // --- ADMIN CONTROL PANEL ENGINE ---
+    function toggleAdminAuthModal() {
+      if (isAdminLoggedIn) window.location.hash = '#admin';
+      else document.getElementById('adminAuthModal').classList.remove('hidden');
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      try {
+        await auth.signInWithEmailAndPassword(document.getElementById('admEmail').value, document.getElementById('admPass').value);
+        isAdminLoggedIn = true;
+        closeModal('adminAuthModal');
+        showToast("Authenticated as Administrator!");
+        window.location.hash = '#admin';
+        renderAdminProductsTable();
+      } catch (err) {
+        reportSaveFailure("Admin Login Error", err);
+      }
+    }
+
+    function logoutAdmin() {
+      auth.signOut();
+      isAdminLoggedIn = false;
+      window.location.hash = '#home';
+      showToast("Logged out.");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+      if (id === 'playerModal') document.getElementById('playerVideoContainer').innerHTML = '';
+    }
+
+    function switchAdminTab(tab) {
+      ['Products', 'Orders', 'Autos', 'Vx', 'Media'].forEach(t => {
+        document.getElementById(`admTab${t}`).classList.add('hidden');
+        document.getElementById(`admTabBtn${t}`).className = "py-2.5 border-b-2 border-transparent hover:text-brandOrange whitespace-nowrap";
+      });
+      const cap = tab.charAt(0).toUpperCase() + tab.slice(1);
+      document.getElementById(`admTab${cap}`).classList.remove('hidden');
+      document.getElementById(`admTabBtn${cap}`).className = "py-2.5 border-b-2 border-brandOrange text-brandOrange whitespace-nowrap";
+    }
+
+    // OPEN MODALS FOR EDITING OR CREATING
+    function openProductModal(id = null) { 
+      const heading = document.getElementById('pmModalHeading');
+      const editInput = document.getElementById('pmEditId');
+      const preview = document.getElementById('pmPreview');
+
+      if (id) {
+        const p = cachedProducts.find(item => item.id === id);
+        if (!p) return;
+        heading.innerText = `Edit Gadget Listing (${p.title})`;
+        editInput.value = p.id;
+        document.getElementById('pmCategory').value = p.category || 'iPhones';
+        document.getElementById('pmTitle').value = p.title || '';
+        document.getElementById('pmPrice').value = p.price || '';
+        document.getElementById('pmCondition').value = p.condition || 'UK Used';
+        document.getElementById('pmStock').value = p.stock !== undefined ? p.stock : 1;
+        document.getElementById('pmStatus').value = p.status || 'In Stock';
+        document.getElementById('pmColor').value = p.color || '';
+        document.getElementById('pmStorage').value = p.storage || '';
+        document.getElementById('pmNetwork').value = p.network || 'Physical SIM + eSIM';
+        document.getElementById('pmCosmeticGrade').value = p.cosmeticGrade || '9.5 / 10';
+        document.getElementById('pmScreenState').value = p.screenState || 'Original Screen';
+        document.getElementById('pmBatteryState').value = p.batteryState || 'Original Battery';
+        document.getElementById('pmBatHealth').value = p.batteryHealth || 100;
+        document.getElementById('pmMdmStatus').value = p.mdmStatus || 'Clean / Unrestricted';
+        document.getElementById('pmYear').value = p.year || '';
+        document.getElementById('pmRam').value = p.ram || '';
+        document.getElementById('pmProcessor').value = p.processor || '';
+        document.getElementById('pmBatteryCap').value = p.batteryCap || '';
+        document.getElementById('pmCameraSpecs').value = p.camera || '';
+        document.getElementById('pmDisplaySpecs').value = p.display || '';
+        document.getElementById('pmDescription').value = p.description || '';
+        document.getElementById('pmFidWorking').checked = p.faceIdWorking !== false;
+        document.getElementById('pmTtWorking').checked = p.trueToneWorking !== false;
+        document.getElementById('pmScrOrig').checked = p.screenOriginal !== false;
+        document.getElementById('pmBatOrig').checked = p.batteryOriginal !== false;
+        document.getElementById('pmVideoUrl').value = (p.video && !p.video.startsWith('data:')) ? p.video : '';
+
+        preview.innerHTML = '';
+        const imgList = (p.images && p.images.length > 0) ? p.images.slice(0, 4) : (p.image ? [p.image] : []);
+        if (imgList.length > 0) {
+          preview.classList.remove('hidden');
+          imgList.forEach((url, idx) => {
+            const div = document.createElement('div');
+            div.className = "relative group";
+            div.innerHTML = `
+              <img src="${url}" class="h-16 w-16 object-cover rounded-lg border border-brandOrange/60 shadow" />
+              <span class="absolute top-0 right-0 bg-brandOrange text-white text-[9px] font-black px-1 rounded-bl">${idx+1}</span>
+            `;
+            preview.appendChild(div);
+          });
+        }
+      } else {
+        heading.innerText = 'Add New Gadget Inventory Unit';
+        editInput.value = '';
+        preview.classList.add('hidden');
+        preview.innerHTML = '';
+        document.getElementById('pmPresetSelect').value = '';
+        document.getElementById('pmTitle').value = '';
+        document.getElementById('pmPrice').value = '';
+        document.getElementById('pmStock').value = '1';
+        document.getElementById('pmColor').value = '';
+        document.getElementById('pmStorage').value = '';
+        document.getElementById('pmCosmeticGrade').value = '9.5 / 10';
+        document.getElementById('pmYear').value = '';
+        document.getElementById('pmRam').value = '';
+        document.getElementById('pmProcessor').value = '';
+        document.getElementById('pmBatteryCap').value = '';
+        document.getElementById('pmCameraSpecs').value = '';
+        document.getElementById('pmDisplaySpecs').value = '';
+        document.getElementById('pmDescription').value = '';
+        document.getElementById('pmVideoUrl').value = '';
+        document.getElementById('pmStatus').value = 'In Stock';
+      }
+      document.getElementById('productModal').classList.remove('hidden'); 
+    }
+
+    function openAutoModal(id = null) {
+      const heading = document.getElementById('amModalHeading');
+      const editInput = document.getElementById('amEditId');
+      const preview = document.getElementById('amPreview');
+
+      if (id) {
+        const car = cachedAutos.find(item => item.id === id);
+        if (!car) return;
+        heading.innerHTML = `<i class="fa-solid fa-car text-brandOrange"></i> Edit Vehicle (${car.make} ${car.model})`;
+        editInput.value = car.id;
+        document.getElementById('amMake').value = car.make;
+        document.getElementById('amModel').value = car.model;
+        document.getElementById('amYear').value = car.year;
+        document.getElementById('amCondition').value = car.condition;
+        document.getElementById('amPrice').value = car.price;
+        document.getElementById('amStatus').value = car.status || 'Available';
+        document.getElementById('amTrim').value = car.trim || '';
+        document.getElementById('amMileage').value = car.mileage || '';
+        document.getElementById('amVideoUrl').value = (car.video && !car.video.startsWith('data:')) ? car.video : '';
+
+        if (car.image) {
+          document.getElementById('amPreviewImg').src = car.image;
+          preview.classList.remove('hidden');
+        }
+      } else {
+        heading.innerHTML = `<i class="fa-solid fa-car text-brandOrange"></i> Add Automobile Listing`;
+        editInput.value = '';
+        preview.classList.add('hidden');
+        document.getElementById('amMake').value = '';
+        document.getElementById('amModel').value = '';
+        document.getElementById('amPrice').value = '';
+        document.getElementById('amTrim').value = '';
+        document.getElementById('amMileage').value = '';
+        document.getElementById('amVideoUrl').value = '';
+        document.getElementById('amStatus').value = 'Available';
+      }
+      document.getElementById('autoModal').classList.remove('hidden');
+    }
+
+    function openVxMediaModal(id = null) {
+      const heading = document.getElementById('vxModalHeading');
+      const editInput = document.getElementById('vxEditId');
+      const preview = document.getElementById('vxPreview');
+
+      if (id) {
+        const item = cachedVxMedia.find(m => m.id === id);
+        if (!item) return;
+        heading.innerText = `Edit VeeXchange Media (${item.title})`;
+        editInput.value = item.id;
+        document.getElementById('vxCategory').value = item.category;
+        document.getElementById('vxTitle').value = item.title;
+        if (item.image) {
+          document.getElementById('vxPreviewImg').src = item.image;
+          preview.classList.remove('hidden');
+        }
+      } else {
+        heading.innerText = 'Upload VeeXchange Rate Card / Proof';
+        editInput.value = '';
+        preview.classList.add('hidden');
+        document.getElementById('vxTitle').value = '';
+      }
+      document.getElementById('vxMediaModal').classList.remove('hidden'); 
+    }
+
+    function openVideoModal(id = null) {
+      const heading = document.getElementById('vmModalHeading');
+      const editInput = document.getElementById('vmEditId');
+      const preview = document.getElementById('vmPreview');
+
+      if (id) {
+        const v = cachedVideos.find(item => item.id === id);
+        if (!v) return;
+        heading.innerText = `Edit VeeMedia Video (${v.title})`;
+        editInput.value = v.id;
+        document.getElementById('vmTitle').value = v.title;
+        document.getElementById('vmCategory').value = v.category;
+        document.getElementById('vmVideoUrl').value = (v.videoUrl && !v.videoUrl.startsWith('data:')) ? v.videoUrl : '';
+        if (v.thumbUrl) {
+          document.getElementById('vmPreviewImg').src = v.thumbUrl;
+          preview.classList.remove('hidden');
+        }
+      } else {
+        heading.innerText = 'Add VeeMedia Video Post';
+        editInput.value = '';
+        preview.classList.add('hidden');
+        document.getElementById('vmTitle').value = '';
+        document.getElementById('vmVideoUrl').value = '';
+      }
+      document.getElementById('videoModal').classList.remove('hidden'); 
+    }
+
+    // Direct Toggle Sold / Available Status
+    async function toggleSoldStatus(path, currentStatus) {
+      const newStatus = (currentStatus === 'Sold Out' || currentStatus === 'Sold') ? 'In Stock' : 'Sold Out';
+      try {
+        await db.ref(path).update({ status: newStatus });
+        showToast(`Inventory status updated to ${newStatus}!`);
+      } catch (err) {
+        reportSaveFailure("Status Toggle Error", err);
+      }
+    }
+
+    // SAVE PRODUCT WITH MAX 4 PHOTOS & ACCURATE iPHONE SPECS
+    async function handleSaveProduct(e) {
+      e.preventDefault();
+      const btn = getFormElement('btnSaveProduct');
+      if (btn.dataset.saving === 'true') return;
+
+      btn.dataset.saving = 'true';
+      btn.innerText = "Saving Gadget...";
+      btn.disabled = true;
+
+      try {
+        const editId = getFormElement('pmEditId').value;
+        const id = editId || ('P' + Date.now());
+        const existing = editId ? cachedProducts.find(p => p.id === editId) : null;
+
+        const imgFilesEl = getFormElement('pmImgFiles');
+        const vidInput = getFormElement('pmVidFile');
+        const vidUrlInput = getFormElement('pmVideoUrl').value.trim();
+
+        let imagesList = [];
+        if (existing) {
+          imagesList = Array.isArray(existing.images) && existing.images.length ? [...existing.images] : (existing.image ? [existing.image] : []);
+        }
+
+        if (imgFilesEl.files && imgFilesEl.files.length > 0) {
+          if (imgFilesEl.files.length > 4) {
+            throw new Error("Maximum 4 photos allowed per gadget. Please select up to 4 images.");
+          }
+
+          imagesList = [];
+          for (const file of Array.from(imgFilesEl.files).slice(0, 4)) {
+            try {
+              const uploadedUrl = await uploadMediaToStorage(file, 'products/images', 'gadget-photo');
+              if (uploadedUrl) imagesList.push(uploadedUrl);
+            } catch (uploadErr) {
+              throw new Error(`Image upload failed: ${getErrorDetails(uploadErr)}`);
+            }
+          }
+        }
+
+        let videoDataUrl = vidUrlInput || (existing ? existing.video || '' : '');
+        if (vidInput.files && vidInput.files[0]) {
+          try {
+            videoDataUrl = await uploadMediaToStorage(vidInput.files[0], 'products/videos', 'gadget-video');
+          } catch (vidErr) {
+            throw new Error(`Video upload failed: ${getErrorDetails(vidErr)}`);
+          }
+        }
+
+        const requiredFieldIds = ['pmCategory', 'pmTitle', 'pmPrice', 'pmCondition', 'pmStock', 'pmStorage', 'pmDescription'];
+        requiredFieldIds.forEach(fieldId => {
+          const field = getFormElement(fieldId);
+          if (String(field.value).trim() === '') {
+            throw new Error(`Please complete the ${fieldId.replace('pm', '').replace(/([A-Z])/g, ' $1').trim()} field.`);
+          }
+        });
+
+        const stockVal = Number(getFormElement('pmStock').value);
+        let statusVal = getFormElement('pmStatus').value;
+        if (stockVal <= 0) statusVal = 'Sold Out';
+
+        const record = {
+          id,
+          category: getFormElement('pmCategory').value,
+          title: getFormElement('pmTitle').value.trim(),
+          price: Number(getFormElement('pmPrice').value),
+          condition: getFormElement('pmCondition').value,
+          stock: stockVal,
+          status: statusVal,
+          color: getFormElement('pmColor').value.trim(),
+          storage: getFormElement('pmStorage').value.trim(),
+          network: getFormElement('pmNetwork').value,
+          cosmeticGrade: getFormElement('pmCosmeticGrade').value.trim(),
+          screenState: getFormElement('pmScreenState').value,
+          batteryState: getFormElement('pmBatteryState').value,
+          batteryHealth: getFormElement('pmBatHealth').value || 100,
+          mdmStatus: getFormElement('pmMdmStatus').value,
+          year: getFormElement('pmYear').value,
+          ram: getFormElement('pmRam').value,
+          processor: getFormElement('pmProcessor').value,
+          batteryCap: getFormElement('pmBatteryCap').value,
+          camera: getFormElement('pmCameraSpecs').value,
+          display: getFormElement('pmDisplaySpecs').value,
+          description: getFormElement('pmDescription').value.trim(),
+          faceIdWorking: getFormElement('pmFidWorking').checked,
+          trueToneWorking: getFormElement('pmTtWorking').checked,
+          screenOriginal: getFormElement('pmScrOrig').checked,
+          batteryOriginal: getFormElement('pmBatOrig').checked,
+          image: imagesList[0] || '',
+          images: imagesList.slice(0, 4),
+          video: videoDataUrl || '',
+          createdAt: existing ? existing.createdAt : new Date().toISOString()
+        };
+
+        await db.ref("products/" + id).set(record);
+        await db.ref("products").once("value");
+        closeModal('productModal');
+        renderAdminProductsTable();
+        renderShopGrid();
+        renderHomeFeatured();
+        showToast(editId ? "Gadget updated successfully!" : "Gadget published to Inventory!");
+      } catch (err) {
+        reportSaveFailure("Error saving gadget", err);
+      } finally {
+        const saveBtn = document.getElementById('btnSaveProduct');
+        if (saveBtn) {
+          saveBtn.dataset.saving = 'false';
+          saveBtn.innerText = "Save & Publish Gadget";
+          saveBtn.disabled = false;
+        }
+      }
+    }
+
+    async function handleSaveAuto(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveAuto');
+      btn.innerText = "Saving Vehicle..."; btn.disabled = true;
+
+      try {
+        const editId = document.getElementById('amEditId').value;
+        const id = editId || ('AUTO' + Date.now());
+        const existing = editId ? cachedAutos.find(c => c.id === editId) : null;
+
+        const imgInput = document.getElementById('amImgFile');
+        const vidInput = document.getElementById('amVidFile');
+        const vidUrlInput = document.getElementById('amVideoUrl').value;
+
+        let compressedImg = existing ? existing.image : '';
+        if (imgInput.files && imgInput.files[0]) {
+          compressedImg = await uploadMediaToStorage(imgInput.files[0], 'automobiles/images', 'vehicle-image');
+        } else if (!existing) {
+          btn.innerText = "Save Vehicle"; btn.disabled = false;
+          return alert("Please pick a vehicle main image file.");
+        }
+
+        let videoDataUrl = vidUrlInput || (existing ? existing.video : '');
+        if (vidInput.files && vidInput.files[0]) {
+          videoDataUrl = await uploadMediaToStorage(vidInput.files[0], 'automobiles/videos', 'vehicle-video');
+        }
+
+        const record = {
+          id,
+          make: document.getElementById('amMake').value,
+          model: document.getElementById('amModel').value,
+          year: Number(document.getElementById('amYear').value),
+          condition: document.getElementById('amCondition').value,
+          price: Number(document.getElementById('amPrice').value),
+          status: document.getElementById('amStatus').value,
+          trim: document.getElementById('amTrim').value,
+          mileage: document.getElementById('amMileage').value,
+          image: compressedImg,
+          video: videoDataUrl,
+          createdAt: existing ? existing.createdAt : new Date().toISOString()
+        };
+
+        await db.ref("automobiles/" + id).set(record);
+        closeModal('autoModal');
+        showToast(editId ? "Vehicle record updated!" : "Vehicle published to Autos!");
+      } catch (err) {
+        reportSaveFailure("Error saving vehicle", err);
+      } finally {
+        btn.innerText = "Save Vehicle"; btn.disabled = false;
+      }
+    }
+
+    async function handleSaveVxMedia(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveVx');
+      btn.innerText = "Uploading..."; btn.disabled = true;
+
+      try {
+        const editId = document.getElementById('vxEditId').value;
+        const id = editId || ('VX' + Date.now());
+        const existing = editId ? cachedVxMedia.find(m => m.id === editId) : null;
+
+        const imgInput = document.getElementById('vxImgFile');
+        const vidInput = document.getElementById('vxVidFile');
+
+        let compressedImg = existing ? existing.image : '';
+        if (imgInput.files && imgInput.files[0]) {
+          compressedImg = await uploadMediaToStorage(imgInput.files[0], 'veexchange/images', 'vx-image');
+        } else if (!existing) {
+          btn.innerText = "Save Record"; btn.disabled = false;
+          return alert("Please select an image file.");
+        }
+
+        let videoDataUrl = existing ? existing.video : '';
+        if (vidInput.files && vidInput.files[0]) {
+          videoDataUrl = await uploadMediaToStorage(vidInput.files[0], 'veexchange/videos', 'vx-video');
+        }
+
+        const record = {
+          id,
+          category: document.getElementById('vxCategory').value,
+          title: document.getElementById('vxTitle').value,
+          image: compressedImg,
+          video: videoDataUrl,
+          createdAt: existing ? existing.createdAt : new Date().toISOString()
+        };
+
+        await db.ref("veexchange_media/" + id).set(record);
+        closeModal('vxMediaModal');
+        showToast("VeeXchange item updated!");
+      } catch (err) {
+        reportSaveFailure("Error saving item", err);
+      } finally {
+        btn.innerText = "Save Record"; btn.disabled = false;
+      }
+    }
+
+    async function handleSaveVideo(e) {
+      e.preventDefault();
+      const btn = document.getElementById('btnSaveVideo');
+      btn.innerText = "Publishing..."; btn.disabled = true;
+
+      try {
+        const editId = document.getElementById('vmEditId').value;
+        const id = editId || ('VM' + Date.now());
+        const existing = editId ? cachedVideos.find(v => v.id === editId) : null;
+
+        const thumbInput = document.getElementById('vmThumbFile');
+        const videoInput = document.getElementById('vmVideoFile');
+        const videoUrlInput = document.getElementById('vmVideoUrl').value;
+
+        let thumbDataUrl = existing ? existing.thumbUrl : '';
+        if (thumbInput.files && thumbInput.files[0]) {
+          thumbDataUrl = await uploadMediaToStorage(thumbInput.files[0], 'videos/thumbnails', 'video-thumb');
+        } else if (!existing) {
+          btn.innerText = "Publish Post"; btn.disabled = false;
+          return alert("Please select a cover thumbnail image.");
+        }
+
+        let finalVideoUrl = videoUrlInput || (existing ? existing.videoUrl : '');
+        if (videoInput.files && videoInput.files[0]) {
+          finalVideoUrl = await uploadMediaToStorage(videoInput.files[0], 'videos/files', 'video-file');
+        }
+
+        const record = {
+          id,
+          title: document.getElementById('vmTitle').value,
+          category: document.getElementById('vmCategory').value,
+          videoUrl: finalVideoUrl,
+          thumbUrl: thumbDataUrl,
+          createdAt: existing ? existing.createdAt : new Date().toISOString()
+        };
+
+        await db.ref("veemedia_videos/" + id).set(record);
+        closeModal('videoModal');
+        showToast("Video post updated!");
+      } catch (err) {
+        reportSaveFailure("Error publishing video", err);
+      } finally {
+        btn.innerText = "Publish Post"; btn.disabled = false;
+      }
+    }
+
+    // ADMIN TABLE RENDERERS (RELIABLE & INSTANT AUTO-LOAD)
+    function renderAdminProductsTable() {
+      const tbody = document.getElementById('admProductsTableBody');
+      if (!tbody) return; 
+      tbody.innerHTML = '';
+
+      if (!cachedProducts || cachedProducts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400 text-xs">No gadget records found in inventory database. Click "+ Add New Gadget Unit" above!</td></tr>`;
+        return;
+      }
+
+      cachedProducts.forEach(p => {
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-white/5";
+        const stockQty = Number(p.stock !== undefined ? p.stock : 1);
+        const isSoldOut = (p.status === 'Sold Out') || (stockQty <= 0);
+        const imgList = (p.images && p.images.length > 0) ? p.images.slice(0, 4) : [p.image || 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80'];
+        const thumb = imgList[0];
+
+        tr.innerHTML = `
+          <td class="p-3 font-bold text-white flex items-center space-x-2">
+            <img src="${thumb}" class="w-9 h-9 rounded-lg object-cover border border-white/10" />
+            <div>
+              <span class="truncate max-w-xs block">${p.title}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${p.storage || ''} ${p.ram ? '• ' + p.ram : ''} • (${imgList.length} Photos)</span>
+            </div>
+          </td>
+          <td class="p-3"><span class="bg-brandOrange/20 text-brandOrange font-bold text-[10px] px-2 py-0.5 rounded border border-brandOrange/30">${p.condition || 'UK Used'}</span></td>
+          <td class="p-3">
+            <div class="flex items-center space-x-2">
+              <span class="font-mono text-xs font-bold text-slate-200">${stockQty} Units</span>
+              <button onclick="toggleSoldStatus('products/${p.id}/status', '${p.status || 'In Stock'}')" class="text-[9px] font-extrabold px-2 py-0.5 rounded-full uppercase transition ${isSoldOut ? 'bg-red-500/20 text-red-400 border border-red-500/40 hover:bg-emerald-600/30' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-red-600/30'}" title="Click to Toggle Status">
+                ${isSoldOut ? 'Sold Out' : 'In Stock'}
+              </button>
+            </div>
+          </td>
+          <td class="p-3 text-slate-300 text-[11px]">${p.color || 'Standard'} • ${p.network || 'Physical SIM'}</td>
+          <td class="p-3 text-[11px]">${p.cosmeticGrade || '9.5/10'} | Bat: ${p.batteryHealth || 100}%</td>
+          <td class="p-3 font-mono font-bold text-brandOrange">₦${Number(p.price).toLocaleString()}</td>
+          <td class="p-3 text-right space-x-2">
+            <button onclick="openProductModal('${p.id}')" class="text-blue-400 hover:text-blue-300 text-xs px-2 py-1 bg-white/5 rounded-lg border border-white/10"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+            <button onclick="deleteRecord('products/${p.id}')" class="text-red-400 hover:text-red-300 text-xs px-2 py-1 bg-white/5 rounded-lg border border-white/10"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAdminOrdersTable() {
+      const tbody = document.getElementById('admOrdersTableBody');
+      if (!tbody) return; tbody.innerHTML = '';
+      cachedOrders.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.className = "border-b border-white/5";
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-brandOrange">${o.orderRef}</td>
+          <td class="p-3">${o.customerName} (${o.customerPhone})</td>
+          <td class="p-3 font-mono">₦${Number(o.totalAmount).toLocaleString()}</td>
+          <td class="p-3"><span class="bg-brandOrange text-white font-bold text-[9px] px-2 py-0.5 rounded-full">${o.orderStatus}</span></td>
+          <td class="p-3 text-right"><button onclick="confirmOrderPayment('${o.orderRef}')" class="bg-emerald-600 text-white px-2 py-1 rounded text-[10px] font-bold">Approve</button></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderAdminAutosGrid() {
+      const grid = document.getElementById('admAutosGrid');
+      if (!grid) return; grid.innerHTML = '';
+      cachedAutos.forEach(car => {
+        const div = document.createElement('div');
+        div.className = "liquid-glass p-3 rounded-xl space-y-2 border border-white/10 text-xs";
+        const isSold = car.status === 'Sold';
+
+        div.innerHTML = `
+          <img src="${car.image}" class="h-32 w-full object-cover rounded-lg" />
+          <div class="font-bold text-white truncate">${car.year} ${car.make} ${car.model}</div>
+          <div class="flex justify-between items-center pt-1 border-t border-white/10">
+            <button onclick="toggleSoldStatus('automobiles/${car.id}/status', '${car.status || 'Available'}')" class="text-[9px] font-extrabold px-2 py-0.5 rounded uppercase ${isSold ? 'bg-red-500/20 text-red-400 border border-red-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'}">
+              ${isSold ? 'Sold' : 'Available'}
+            </button>
+            <div class="space-x-2">
+              <button onclick="openAutoModal('${car.id}')" class="text-blue-400 hover:text-blue-300"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+              <button onclick="deleteRecord('automobiles/${car.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function renderAdminVxGrid() {
+      const grid = document.getElementById('admVxGrid');
+      if (!grid) return; grid.innerHTML = '';
+      cachedVxMedia.forEach(m => {
+        const div = document.createElement('div');
+        div.className = "liquid-glass p-3 rounded-xl space-y-2 border border-white/10 text-xs";
+        div.innerHTML = `
+          <img src="${m.image}" class="h-32 w-full object-cover rounded-lg" />
+          <div class="font-bold text-white truncate">${m.title}</div>
+          <div class="flex justify-between items-center pt-1 border-t border-white/10">
+            <span class="text-[10px] text-amber-400 font-bold">${m.category}</span>
+            <div class="space-x-2">
+              <button onclick="openVxMediaModal('${m.id}')" class="text-blue-400 hover:text-blue-300"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+              <button onclick="deleteRecord('veexchange_media/${m.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    function renderAdminVideosGrid() {
+      const grid = document.getElementById('admMediaGrid');
+      if (!grid) return; grid.innerHTML = '';
+      cachedVideos.forEach(v => {
+        const div = document.createElement('div');
+        div.className = "liquid-glass p-3 rounded-xl space-y-2 border border-white/10 text-xs";
+        div.innerHTML = `
+          <img src="${v.thumbUrl}" class="h-32 w-full object-cover rounded-lg" />
+          <div class="font-bold text-white truncate">${v.title}</div>
+          <div class="flex justify-between items-center pt-1 border-t border-white/10">
+            <span class="text-[10px] text-blue-400 font-bold">${v.category}</span>
+            <div class="space-x-2">
+              <button onclick="openVideoModal('${v.id}')" class="text-blue-400 hover:text-blue-300"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+              <button onclick="deleteRecord('veemedia_videos/${v.id}')" class="text-red-400 hover:text-red-300"><i class="fa-solid fa-trash"></i></button>
+            </div>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+    }
+
+    async function deleteRecord(path) {
+      if (confirm(`Delete record at ${path}?`)) {
+        await db.ref(path).remove();
+        showToast("Record deleted.");
+      }
+    }
+
+    async function confirmOrderPayment(ref) {
+      if (confirm(`Approve payment for ${ref}?`)) {
+        await db.ref(`orders/${ref}`).update({ paymentStatus: "Confirmed", orderStatus: "Processing" });
+        showToast("Payment approved!");
+      }
+    }
+  </script>
+</body>
+</html>
