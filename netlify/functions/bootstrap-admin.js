@@ -7,10 +7,18 @@ exports.handler = async (event) => {
     const decoded = await verifyUser(event);
     const allowedEmail = String(process.env.ADMIN_EMAIL || "").trim().toLowerCase();
     const signedInEmail = String(decoded.email || "").trim().toLowerCase();
+    const emailVerified = decoded.email_verified === true;
 
     if (!allowedEmail) return response(503, { error: "ADMIN_EMAIL is not configured." });
-    if (!signedInEmail || signedInEmail !== allowedEmail || decoded.email_verified !== true) {
-      return response(403, { error: "This account is not an approved, verified administrator." });
+    if (!signedInEmail || signedInEmail !== allowedEmail || !emailVerified) {
+      return response(403, {
+        error: "Administrator verification failed.",
+        diagnostic: {
+          signedInEmail: signedInEmail || "(missing from Firebase token)",
+          emailVerified,
+          adminEmailMatches: Boolean(signedInEmail && signedInEmail === allowedEmail)
+        }
+      });
     }
 
     const auth = getAdminApp().auth();
