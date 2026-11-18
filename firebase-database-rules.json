@@ -2,66 +2,83 @@
   "rules": {
     ".read": false,
     ".write": false,
+
     "products": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null && auth.token.admin === true",
       ".indexOn": ["category", "brand", "price", "availability", "featured"]
     },
+
     "inventory": {
-      ".read": "auth != null",
-      ".write": "auth != null"
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": "auth != null && auth.token.admin === true"
     },
+
     "deviceCatalogue": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null && auth.token.admin === true",
       ".indexOn": ["deviceType", "priceEstimate", "targetUsage"]
     },
+
     "orders": {
-      "$orderId": {
-        ".read": "auth != null || (query.orderByChild == 'orderRef' && query.equalTo == data.child('orderRef').val())",
-        ".write": "true",
-        ".validate": "newData.hasChildren(['orderRef', 'customerName', 'customerPhone', 'items', 'totalAmount'])"
-      },
-      ".read": "auth != null",
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": false,
       ".indexOn": ["orderRef", "paymentStatus", "orderStatus", "createdAt"]
     },
+
     "automobiles": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null && auth.token.admin === true",
       ".indexOn": ["make", "model", "year", "price", "availability"]
     },
+
     "automobileEnquiries": {
-      ".read": "auth != null",
-      ".write": "true"
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": false
     },
+
     "veexchange": {
       "rates": {
         ".read": true,
-        ".write": "auth != null"
+        ".write": "auth != null && auth.token.admin === true"
       },
       "enquiries": {
-        ".read": "auth != null",
-        ".write": "true",
+        ".read": "auth != null && auth.token.admin === true",
+        ".write": false,
         ".indexOn": ["enquiryRef", "createdAt"]
       }
     },
+
+    "veexchange_media": {
+      ".read": true,
+      ".write": "auth != null && auth.token.admin === true"
+    },
+
+    "veemedia_videos": {
+      ".read": true,
+      ".write": "auth != null && auth.token.admin === true"
+    },
+
     "media": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null && auth.token.admin === true",
       ".indexOn": ["status", "category", "createdAt"]
     },
+
     "promotions": {
       ".read": true,
-      ".write": "auth != null",
+      ".write": "auth != null && auth.token.admin === true",
       ".indexOn": ["status", "startDate", "endDate"]
     },
+
     "publicSettings": {
       ".read": true,
-      ".write": "auth != null"
+      ".write": "auth != null && auth.token.admin === true"
     },
+
     "auditLogs": {
-      ".read": "auth != null",
-      ".write": "auth != null",
+      ".read": "auth != null && auth.token.admin === true",
+      ".write": "auth != null && auth.token.admin === true",
       ".indexOn": ["timestamp", "action"]
     }
   }
