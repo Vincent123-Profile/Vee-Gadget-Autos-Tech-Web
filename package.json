@@ -1,0 +1,12 @@
+{
+  "name": "vee-gadget-autos-tech",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vee Gadget Autos Tech website and secure Netlify functions",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}
