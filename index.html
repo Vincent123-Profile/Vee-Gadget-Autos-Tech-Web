@@ -1658,16 +1658,29 @@
         renderAdminVideosGrid();
       });
 
-      // Realtime DB - Admin Auth Listener
-      auth.onAuthStateChanged((user) => {
+      // Realtime DB - Admin Auth Listener. Only verified custom-claim admins access orders.
+      auth.onIdTokenChanged(async (user) => {
         if (user) {
-          isAdminLoggedIn = true;
-          db.ref("orders").on("value", (snap) => {
+          try {
+            const tokenResult = await user.getIdTokenResult();
+            isAdminLoggedIn = tokenResult.claims.admin === true;
+          } catch (error) {
+            isAdminLoggedIn = false;
+          }
+        } else {
+          isAdminLoggedIn = false;
+        }
+
+        const ordersRef = db.ref("orders");
+        ordersRef.off("value");
+        if (isAdminLoggedIn) {
+          ordersRef.on("value", (snap) => {
             cachedOrders = snap.exists() ? Object.values(snap.val()) : [];
             renderAdminOrdersTable();
           });
         } else {
-          isAdminLoggedIn = false;
+          cachedOrders = [];
+          renderAdminOrdersTable();
         }
         renderAdminProductsTable();
       });
@@ -2256,48 +2269,44 @@
     async function handlePlaceOrder(e) {
       e.preventDefault();
       const btn = document.getElementById('btnPlaceOrder');
-      btn.innerText = "Processing..."; btn.disabled = true;
-
-      const subtotal = cart.reduce((sum, i) => sum + (i.price * i.qty), 0);
-      const dateStr = new Date().toISOString().slice(0,10).replace(/-/g,"");
-      const orderRef = `VGT-${dateStr}-${Math.floor(1000 + Math.random() * 9000)}`;
-
-      const orderData = {
-        orderRef,
-        customerName: document.getElementById('coName').value,
-        customerPhone: document.getElementById('coPhone').value,
-        customerEmail: document.getElementById('coEmail').value,
-        state: document.getElementById('coState').value,
-        city: document.getElementById('coCity').value,
-        deliveryAddress: document.getElementById('coAddress').value,
-        items: cart,
-        totalAmount: subtotal + 5000,
-        paymentStatus: "Pending Verification",
-        orderStatus: "Order Received",
-        createdAt: new Date().toISOString()
-      };
+      btn.innerText = "Processing...";
+      btn.disabled = true;
 
       try {
-        await db.ref("orders/" + orderRef).set(orderData);
-
-        for (const cartItem of cart) {
-          const product = cachedProducts.find(p => p.id === cartItem.id);
-          if (product) {
-            const currentStock = Number(product.stock !== undefined ? product.stock : 1);
-            const newStock = Math.max(0, currentStock - cartItem.qty);
-            const newStatus = newStock === 0 ? 'Sold Out' : (product.status || 'In Stock');
-            await db.ref(`products/${product.id}`).update({ stock: newStock, status: newStatus });
-          }
+        if (!auth.currentUser) {
+          await auth.signInAnonymously();
         }
+        const user = auth.currentUser;
+        const token = await user.getIdToken(true);
+        const orderPayload = {
+          customerName: document.getElementById('coName').value,
+          customerPhone: document.getElementById('coPhone').value,
+          customerEmail: document.getElementById('coEmail').value,
+          state: document.getElementById('coState').value,
+          city: document.getElementById('coCity').value,
+          deliveryAddress: document.getElementById('coAddress').value,
+          items: cart.map(item => ({ id: item.id, qty: item.qty }))
+        };
 
-        cart = []; saveCart();
-        btn.innerText = "Submit Order & Bank Transfer"; btn.disabled = false;
-        showToast(`Order ${orderRef} submitted!`);
-        alert(`Order Received!\n\nOrder Ref: ${orderRef}\n\nPlease transfer total to Wema Bank (0289654120 - VEE GADGET AUTOS TECH) and keep your receipt.`);
+        const orderResponse = await fetch('/.netlify/functions/create-order', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+          body: JSON.stringify(orderPayload)
+        });
+        const result = await orderResponse.json();
+        if (!orderResponse.ok) throw new Error(result.error || 'Order submission failed.');
+
+        cart = [];
+        saveCart();
+        btn.innerText = "Submit Order & Bank Transfer";
+        btn.disabled = false;
+        showToast(`Order ${result.orderRef} submitted!`);
+        alert(`Order Received!\n\nOrder Ref: ${result.orderRef}\n\nTotal: ₦${Number(result.totalAmount).toLocaleString()}\n\nPlease transfer the total to the bank account shown below and keep your receipt.`);
         window.location.hash = '#home';
       } catch (err) {
         alert("Order Error: " + err.message);
-        btn.innerText = "Submit Order & Bank Transfer"; btn.disabled = false;
+        btn.innerText = "Submit Order & Bank Transfer";
+        btn.disabled = false;
       }
     }
 
@@ -2552,12 +2561,26 @@
       e.preventDefault();
       try {
         await auth.signInWithEmailAndPassword(document.getElementById('admEmail').value, document.getElementById('admPass').value);
+        const user = auth.currentUser;
+        const token = await user.getIdToken();
+        const setupResponse = await fetch('/.netlify/functions/bootstrap-admin', {
+          method: 'POST',
+          headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+          body: JSON.stringify({})
+        });
+        const setupResult = await setupResponse.json();
+        if (!setupResponse.ok) throw new Error(setupResult.error || 'Administrator access setup failed.');
+        await user.getIdToken(true);
+        const tokenResult = await user.getIdTokenResult();
+        if (tokenResult.claims.admin !== true) throw new Error('Administrator access was not confirmed.');
         isAdminLoggedIn = true;
         closeModal('adminAuthModal');
         showToast("Authenticated as Administrator!");
         window.location.hash = '#admin';
         renderAdminProductsTable();
       } catch (err) {
+        await auth.signOut();
+        isAdminLoggedIn = false;
         reportSaveFailure("Admin Login Error", err);
       }
     }
